@@ -39,7 +39,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btnBrowser" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="txt_path" min="-2" pref="545" max="-2" attributes="0"/>
+              <Component id="txtPath" min="-2" pref="545" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="202" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -49,7 +49,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="104" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="txt_path" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtPath" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnBrowser" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -76,6 +76,9 @@
         <Property name="text" type="java.lang.String" value="Analizar"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnBrowser">
       <Properties>
@@ -90,7 +93,7 @@
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JTextField" name="txt_path">
+    <Component class="javax.swing.JTextField" name="txtPath">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
         <Property name="text" type="java.lang.String" value="Source Paht"/>

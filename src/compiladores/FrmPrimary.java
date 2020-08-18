@@ -7,8 +7,13 @@ package compiladores;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -35,7 +40,7 @@ public class FrmPrimary extends javax.swing.JFrame {
 
         jButton2 = new javax.swing.JButton();
         javax.swing.JButton btnBrowser = new javax.swing.JButton();
-        txt_path = new javax.swing.JTextField();
+        javax.swing.JTextField txtPath = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         txta_output = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -46,6 +51,11 @@ public class FrmPrimary extends javax.swing.JFrame {
 
         jButton2.setText("Analizar");
         jButton2.setToolTipText("");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         btnBrowser.setText("Browser");
         btnBrowser.setName(""); // NOI18N
@@ -55,9 +65,9 @@ public class FrmPrimary extends javax.swing.JFrame {
             }
         });
 
-        txt_path.setEditable(false);
-        txt_path.setText("Source Paht");
-        txt_path.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtPath.setEditable(false);
+        txtPath.setText("Source Paht");
+        txtPath.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
         txta_output.setEditable(false);
         txta_output.setColumns(20);
@@ -85,7 +95,7 @@ public class FrmPrimary extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(btnBrowser)
                 .addGap(18, 18, 18)
-                .addComponent(txt_path, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtPath, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(202, 202, 202))
         );
         layout.setVerticalGroup(
@@ -93,7 +103,7 @@ public class FrmPrimary extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(104, 104, 104)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_path, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBrowser))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -117,12 +127,16 @@ public class FrmPrimary extends javax.swing.JFrame {
                 "txt", "text","frag");
         fc.setFileFilter(filter);
         if( fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION ){
-           txt_path.setText("");
-           txt_path.setText(fc.getSelectedFile().getAbsolutePath());
+           txtPath.setText("");
+           txtPath.setText(fc.getSelectedFile().getAbsolutePath());
            txta_input.setText("");
            leer();            
         }
     }//GEN-LAST:event_btnBrowserActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        escribir();
+    }//GEN-LAST:event_jButton2ActionPerformed
 private void leer() {
         File archivo = null;
         FileReader fr = null;
@@ -130,7 +144,8 @@ private void leer() {
         try {
 			// Apertura del fichero y creacion de BufferedReader para poder
 			// hacer una lectura comoda (disponer del metodo readLine()).
-			archivo = new File (txt_path.getText());
+                        archivo = new File (txtPath.getText());
+			//archivo = new File(txtPath.getText());
                         NombreArchivo=archivo.getName();
                         NombreArchivo=NombreArchivo.replace(".txt", "");
                         fr = new FileReader (archivo);
@@ -153,6 +168,23 @@ private void leer() {
            }catch (Exception e2){
               e2.printStackTrace();
            }
+        }
+    }
+private void escribir() {
+        File fichero=new File(NombreArchivo+".out");//creando fichero txt en raiz
+        PrintWriter writer;
+        try{
+            writer=new PrintWriter(fichero);
+            writer.print(txta_output.getText());//ingresado ecuacion
+            writer.close();
+            JOptionPane.showMessageDialog(null, 
+                    "InfoBox: Se ha analizado con éxito el archivo y se ha "
+                            + "creado un archivo de salida en la carpeta raíz llamado "
+                            +NombreArchivo, "¡ATENCIÓN!",JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch(FileNotFoundException ex){
+           JOptionPane.showMessageDialog(null, 
+                    "Se produjo un error al intentar escribir el archivo de salida", "¡ATENCIÓN!",JOptionPane.INFORMATION_MESSAGE);
         }
     }
     /**
@@ -190,12 +222,11 @@ private void leer() {
             }
         });
     }
-
+private javax.swing.JTextField txtPath;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField txt_path;
     private javax.swing.JTextArea txta_input;
     private javax.swing.JTextArea txta_output;
     // End of variables declaration//GEN-END:variables
