@@ -134,6 +134,8 @@ public class FrmPrimary extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBrowserActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Lexer lexer = new Lexer();
+        lexer.tokenID(txta_input.getText());
         escribir();
     }//GEN-LAST:event_jButton2ActionPerformed
 private void leer() {
