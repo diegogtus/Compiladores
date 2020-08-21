@@ -52,6 +52,7 @@ public class FrmPrimary extends javax.swing.JFrame {
 
         jButton2.setText("Analizar");
         jButton2.setToolTipText("");
+        jButton2.setEnabled(false);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -130,6 +131,7 @@ public class FrmPrimary extends javax.swing.JFrame {
            txtPath.setText("");
            txtPath.setText(fc.getSelectedFile().getAbsolutePath());
            txta_input.setText("");
+           jButton2.setEnabled(true);
            leer();            
         }
     }//GEN-LAST:event_btnBrowserActionPerformed
@@ -139,13 +141,7 @@ public class FrmPrimary extends javax.swing.JFrame {
         
         ArrayList<Tokenizer.Token> tokens = Lexer.lex(txta_input.getText());
         for (Tokenizer.Token token : tokens){
-            if(token.type.name()== "UNRECOGNIZED"){
-              txta_output.append(token.toString()+ "\n");
-              System.out.println(token.type.name());
-          
-            }else
              txta_output.append(token.toString()+ "\n");
-
         }
            
         

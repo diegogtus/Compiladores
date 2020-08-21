@@ -34,12 +34,30 @@ public class Lexer {
         start = matcher.start();
         endChar = matcher.end();
         
-        
-      if(matcher.group(TokenType.ID.name()) != null){
+       if(matcher.group(TokenType.RESERVED.name()) != null){
+          tokens.add(new Token(TokenType.RESERVED, matcher.group(TokenType.RESERVED.name()), line,start,endChar));
+        continue; 
+      }else if(matcher.group(TokenType.BOOLEAN.name()) != null){
+          tokens.add(new Token(TokenType.BOOLEAN, matcher.group(TokenType.BOOLEAN.name()), line,start,endChar));
+        continue;
+      }else if(matcher.group(TokenType.ID.name()) != null){
           tokens.add(new Token(TokenType.ID, matcher.group(TokenType.ID.name()), line,start,endChar));
         continue;
-      }else if (matcher.group(TokenType.NUMBER.name()) != null) {
-        tokens.add(new Token(TokenType.NUMBER, matcher.group(TokenType.NUMBER.name()), line,start,endChar));
+      }else if(matcher.group(TokenType.UNFINISHED.name()) != null){
+          tokens.add(new Token(TokenType.UNFINISHED, matcher.group(TokenType.UNFINISHED.name()), line,start,endChar));
+        continue;
+      
+      }else if (matcher.group(TokenType.DECIMAL.name()) != null) {
+        tokens.add(new Token(TokenType.DECIMAL, matcher.group(TokenType.DECIMAL.name()), line,start,endChar));
+        continue;
+      }else if(matcher.group(TokenType.HEXA.name()) != null){
+          tokens.add(new Token(TokenType.HEXA, matcher.group(TokenType.HEXA.name()), line,start,endChar));
+        continue;
+      }else if(matcher.group(TokenType.DOUBLE.name()) != null){
+          tokens.add(new Token(TokenType.DOUBLE, matcher.group(TokenType.DOUBLE.name()), line,start,endChar));
+        continue;
+      }else if(matcher.group(TokenType.CHAR.name()) != null){
+          tokens.add(new Token(TokenType.CHAR, matcher.group(TokenType.CHAR.name()), line,start,endChar));
         continue;
       } else if (matcher.group(TokenType.BINARYOP.name()) != null) {
         tokens.add(new Token(TokenType.BINARYOP, matcher.group(TokenType.BINARYOP.name()), line, start,endChar));
@@ -47,52 +65,19 @@ public class Lexer {
       } else if(matcher.group(TokenType.NEWLINE.name()) != null){
           line++;
           input = input.substring(endChar);
-              matcher = tokenPatterns.matcher(input);
-          //}
-         System.out.println(    Integer.toString(endChar) + " " +Integer.toString(input.length()));
+          matcher = tokenPatterns.matcher(input);
           continue;
-      }else if (matcher.group(TokenType.UNRECOGNIZED.name()) != null)
+      }else if (matcher.group(TokenType.WHITESPACE.name()) != null || matcher.group(TokenType.MULTILINE.name()) != null || 
+              matcher.group(TokenType.SINGLE.name()) != null){
+        continue;
+      }else if (matcher.group(TokenType.UNFINISHED.name()) != null){
+          tokens.add(new Token(TokenType.UNFINISHED, matcher.group(TokenType.UNFINISHED.name()), line, start,endChar));
+        continue;
+      }else if (matcher.group(TokenType.UNRECOGNIZED.name()) != null){
           tokens.add(new Token(TokenType.UNRECOGNIZED, matcher.group(TokenType.UNRECOGNIZED.name()), line, start,endChar));
         continue;
+      }
     }
-
     return tokens;
   }    
- /*   public void tokenID(String lexer){
-    Pattern pattern = Pattern.compile("[a-zA-Z](\\w|_)*", Pattern.CASE_INSENSITIVE);
-    Matcher matcher;
-    boolean matchFound;
-    String lex;
-    Integer line = 0;
-    Integer end = 0;
-    Integer start = 0;
-    Integer stringLength = lexer.length()-1;
-        while (end <  stringLength) {
-            matcher = pattern.matcher(lexer);
-            matchFound = matcher.find(end);
-            
-            if(matchFound) {
-                start = matcher.start();
-                end = matcher.end();
-                lex = matcher.group(); 
-                System.out.println(lex + " line: " + lineNumber() + " cols " + start + "-" + end+ " is T_Identifier");
-                continue;
-            }else if(){
-            
-            }else {
-              System.out.println("*** Error line " + ".*** Unrecognized char: " + lexer.substring(start+1, end+1));
-              start = end;
-              end++;
-            }
-            
-        }
-    
-    };
-    
-    public int lineNumber(){
-        Pattern pattern = Pattern.compile("[a-zA-Z](\\w|_)*", Pattern.CASE_INSENSITIVE);
-    Matcher matcher;
-    boolean matchFound;
-        return 1;
-    };*/
 }

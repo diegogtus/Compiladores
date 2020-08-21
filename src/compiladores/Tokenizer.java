@@ -11,12 +11,22 @@ package compiladores;
  */
 public class Tokenizer{
     public static enum TokenType {
-        // Token types cannot have underscores
-        ID("[a-zA-Z][\\w|_]*"),
-        NUMBER("-?[0-9]+"), 
-        BINARYOP("[*|/|+|-|=]"),
-        WHITESPACE("[ \t\f\r]+"),
-        NEWLINE("\n"),
+        RESERVED("void|int|double|bool|string|class|const|interface"
+                + "|null|this|for|while|foreach|if|else|return|break|New|NewArray"
+                + "|Console|WriteLine"),
+        BOOLEAN("true|false"),
+        ID("[a-zA-Z][\\w]*"),
+        WHITESPACE("[\t\f\r]*"),
+        MULTILINE("/\\*[^*]~\\*/|/[\\*\\*]+/"),
+        UNFINISHED("/\\* [^\\*]+"),
+        SINGLE("//[^\r\n]*[\r|\n|\r\n]?"),
+        DECIMAL("-?[0-9]+"), 
+        HEXA("0x[0-9a-fA-F]+|0X[0-9a-fA-F]+"),
+        DOUBLE("[-+]?[0-9]+.|[-+]?[0-9]+.([0-9]+|(E|e)[-+]?[0-9]+|[0-9]+(E|e)[-+]?[0-9]+)"),
+        CHAR("\"[^\\r\\n]+\""),
+        BINARYOP("\\+|-|\\*|/|%|<|<=|>|>=|=|==|!=|&&|\\|\\||!|;|,|\\.|\\[|\\]|\\(|\\)|\\{|\\}|\\[\\]|" +
+            "\\(\\)|\\{\\}"),       
+        NEWLINE("\n|\r\n"),
         UNRECOGNIZED(".");
         
         public final String pattern;
@@ -45,10 +55,15 @@ public class Tokenizer{
 
     @Override
     public String toString() {
-        if(type.name() =="UNRECOGNIZED"){
-            return String.format("*** Error line %s.*** Unrecognized char:  %s", line, data);
-        }else
-            return String.format("%s line %s cols %s-%s is %s", data, line,charStart, charEnd, type.name());
+        if(type.name() =="UNRECOGNIZED")
+            return String.format("*** Error line %s.*** Unrecognized char:  '%s'",
+                    line, data);
+        else if(type.name() =="UNFINISHED")
+            return String.format("*** Error line %s.*** UNFINISHED COMMENT",
+                    line, data);
+        else
+            return String.format( "%-20sline %s cols %s-%s is %s", data, 
+                    line,charStart, charEnd, type.name());
       
     }
 //    public String toString() {
