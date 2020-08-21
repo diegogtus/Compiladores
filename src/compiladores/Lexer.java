@@ -67,14 +67,14 @@ public class Lexer {
           input = input.substring(endChar);
           matcher = tokenPatterns.matcher(input);
           continue;
-      }else if (matcher.group(TokenType.WHITESPACE.name()) != null || matcher.group(TokenType.MULTILINE.name()) != null || 
-              matcher.group(TokenType.SINGLE.name()) != null){
-        continue;
       }else if (matcher.group(TokenType.UNFINISHED.name()) != null){
           tokens.add(new Token(TokenType.UNFINISHED, matcher.group(TokenType.UNFINISHED.name()), line, start,endChar));
         continue;
       }else if (matcher.group(TokenType.UNRECOGNIZED.name()) != null){
           tokens.add(new Token(TokenType.UNRECOGNIZED, matcher.group(TokenType.UNRECOGNIZED.name()), line, start,endChar));
+        continue;
+      }else if (matcher.group(TokenType.WHITESPACE.name()) != null || matcher.group(TokenType.MULTILINE.name()) != null || 
+              matcher.group(TokenType.SINGLE.name()) != null){
         continue;
       }
     }

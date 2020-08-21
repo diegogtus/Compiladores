@@ -138,7 +138,7 @@ public class FrmPrimary extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
        // Tokenizer.Token token = new Tokenizer.Token();
-        
+        txta_output.setText("");
         ArrayList<Tokenizer.Token> tokens = Lexer.lex(txta_input.getText());
         for (Tokenizer.Token token : tokens){
              txta_output.append(token.toString()+ "\n");

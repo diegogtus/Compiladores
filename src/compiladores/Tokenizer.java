@@ -11,23 +11,26 @@ package compiladores;
  */
 public class Tokenizer{
     public static enum TokenType {
+        MULTILINE("/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/"),
+        UNFINISHED("\\*/"),
+        SINGLE("//.+"),
+        WHITESPACE("[\\s]+"),
         RESERVED("void|int|double|bool|string|class|const|interface"
                 + "|null|this|for|while|foreach|if|else|return|break|New|NewArray"
                 + "|Console|WriteLine"),
         BOOLEAN("true|false"),
         ID("[a-zA-Z][\\w]*"),
-        WHITESPACE("[\t\f\r]*"),
-        MULTILINE("/\\*[^*]~\\*/|/[\\*\\*]+/"),
-        UNFINISHED("/\\* [^\\*]+"),
-        SINGLE("//[^\r\n]*[\r|\n|\r\n]?"),
         DECIMAL("-?[0-9]+"), 
         HEXA("0x[0-9a-fA-F]+|0X[0-9a-fA-F]+"),
         DOUBLE("[-+]?[0-9]+.|[-+]?[0-9]+.([0-9]+|(E|e)[-+]?[0-9]+|[0-9]+(E|e)[-+]?[0-9]+)"),
         CHAR("\"[^\\r\\n]+\""),
-        BINARYOP("\\+|-|\\*|/|%|<|<=|>|>=|=|==|!=|&&|\\|\\||!|;|,|\\.|\\[|\\]|\\(|\\)|\\{|\\}|\\[\\]|" +
+        BINARYOP("\\+|\\-|\\*|/|%|<|<=|>|>=|=|==|!=|&&|\\|\\||!|;|,|\\.|\\[|\\]|\\(|\\)|\\{|\\}|\\[\\]|" +
             "\\(\\)|\\{\\}"),       
         NEWLINE("\n|\r\n"),
+
         UNRECOGNIZED(".");
+        
+       
         
         public final String pattern;
 
