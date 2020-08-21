@@ -12,7 +12,7 @@ package compiladores;
 public class Tokenizer{
     public static enum TokenType {
         MULTILINE("/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/"),
-        UNFINISHED("\\*/"),
+        UNFINISHEDCOMMENT("\\*/"),
         SINGLE("//.+"),
         NEWLINE("\n"),
         WHITESPACE("[\\s]+"),
@@ -27,7 +27,11 @@ public class Tokenizer{
         STRING("\"[^\r\n]+\""),
         BINARYOP("\\+|\\-|\\*|/|%|<|<=|>|>=|=|==|!=|&&|\\|\\||!|;|,|\\.|\\[|\\]|\\(|\\)|\\{|\\}|\\[\\]|" +
             "\\(\\)|\\{\\}"),  
-//        UNFINISH_STRING("\""),
+        //UNFINISH_STRING("\""),
+        UNFINISHEDSTRING("\""),
+        UNCLOSEDSTRING("\"\\.+"),
+        UNCLOSEDCOMMENT("/\\*.+"),
+        INVALIDID("[0-9]+[\\w]+"),
         ERROR(".");
         
         public final String pattern;
@@ -63,15 +67,23 @@ public class Tokenizer{
             case "ERROR":
                 return String.format("*** Error line %s.*** Unrecognized char:  '%s'",
                         line, data);
-            case "UNFINISH_STRING":
-                return String.format("*** Error line %s.*** UNCLOSED STRING",
-                        line, data);
-            case "UNFINISHED":
-                return String.format("*** Error line %s.*** END OF COMMENT",
-                        line, data);
+            case "UNFINISHEDCOMMENT":
+                return String.format("*** Error line %s.***UNOPENED OF COMMENT",
+                        line);
+            case "INVALIDID":
+                return String.format("*** Error line %s.***INVALID ID",
+                        line);            
+            case "UNFINISHEDSTRING":
+                return String.format("*** Error line %s.***UNOPENED OF COMMENT",
+                        line);
+             case "UNCLOSEDCOMMENT":
+                return String.format("*** EOF in comment line %s.***", line);
+            case "UNCLOSEDSTRING":
+                return String.format("*** EOF in string line %s.***",
+                        line);
             case "ID":
                 if(data.length() > 31)
-                    return String.format("*** Error id too long.*** TRUNCATED %.31s ", data);
+                    return String.format("*** Error line %s id too long.*** TRUNCATED %.31s ", line, data);
                 else
                     return String.format( "%-20sline %s cols %s-%s is %s", data,
                         line,charStart, charEnd, type.name());
@@ -81,9 +93,6 @@ public class Tokenizer{
         }
       
     }
-//    public String toString() {
-//      return String.format("%s line %s cols %s-%s is %s", data, line,charStart, charEnd, type.name());
-//    }
   }
 }
 

@@ -43,8 +43,8 @@ public class Lexer {
       }else if(matcher.group(TokenType.ID.name()) != null){
           tokens.add(new Token(TokenType.ID, matcher.group(TokenType.ID.name()), line,start,endChar));
         continue;
-      }else if(matcher.group(TokenType.UNFINISHED.name()) != null){
-          tokens.add(new Token(TokenType.UNFINISHED, matcher.group(TokenType.UNFINISHED.name()), line,start,endChar));
+      }else if(matcher.group(TokenType.UNFINISHEDCOMMENT.name()) != null){
+          tokens.add(new Token(TokenType.UNFINISHEDCOMMENT, matcher.group(TokenType.UNFINISHEDCOMMENT.name()), line,start,endChar));
         continue;
       }else if(matcher.group(TokenType.DOUBLE.name()) != null){
           tokens.add(new Token(TokenType.DOUBLE, matcher.group(TokenType.DOUBLE.name()), line,start,endChar));
@@ -66,11 +66,17 @@ public class Lexer {
           input = input.substring(endChar);
           matcher = tokenPatterns.matcher(input);
           continue;
-//      }else if (matcher.group(TokenType.UNFINISH_STRING.name()) != null){
-//          tokens.add(new Token(TokenType.UNFINISH_STRING, matcher.group(TokenType.UNFINISH_STRING.name()), line, start,endChar));
-//        continue;
-      }else if (matcher.group(TokenType.UNFINISHED.name()) != null){
-          tokens.add(new Token(TokenType.UNFINISHED, matcher.group(TokenType.UNFINISHED.name()), line, start,endChar));
+      }else if (matcher.group(TokenType.INVALIDID.name()) != null){
+          tokens.add(new Token(TokenType.INVALIDID, matcher.group(TokenType.INVALIDID.name()), line, start,endChar));
+        continue;
+      }else if (matcher.group(TokenType.UNFINISHEDSTRING.name()) != null){
+          tokens.add(new Token(TokenType.UNFINISHEDSTRING, matcher.group(TokenType.UNFINISHEDSTRING.name()), line, start,endChar));
+        continue;
+      }else if (matcher.group(TokenType.UNCLOSEDSTRING.name()) != null){
+          tokens.add(new Token(TokenType.UNCLOSEDSTRING, matcher.group(TokenType.UNCLOSEDSTRING.name()), line, start,endChar));
+        continue;
+      }else if (matcher.group(TokenType.UNCLOSEDCOMMENT.name()) != null){
+          tokens.add(new Token(TokenType.UNCLOSEDCOMMENT, matcher.group(TokenType.UNCLOSEDCOMMENT.name()), line, start,endChar));
         continue;
       }else if (matcher.group(TokenType.ERROR.name()) != null){
           tokens.add(new Token(TokenType.ERROR, matcher.group(TokenType.ERROR.name()), line, start,endChar));
