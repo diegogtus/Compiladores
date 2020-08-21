@@ -46,15 +46,14 @@ public class Lexer {
       }else if(matcher.group(TokenType.UNFINISHED.name()) != null){
           tokens.add(new Token(TokenType.UNFINISHED, matcher.group(TokenType.UNFINISHED.name()), line,start,endChar));
         continue;
-      
-      }else if (matcher.group(TokenType.DECIMAL.name()) != null) {
-        tokens.add(new Token(TokenType.DECIMAL, matcher.group(TokenType.DECIMAL.name()), line,start,endChar));
-        continue;
-      }else if(matcher.group(TokenType.HEXA.name()) != null){
-          tokens.add(new Token(TokenType.HEXA, matcher.group(TokenType.HEXA.name()), line,start,endChar));
-        continue;
       }else if(matcher.group(TokenType.DOUBLE.name()) != null){
           tokens.add(new Token(TokenType.DOUBLE, matcher.group(TokenType.DOUBLE.name()), line,start,endChar));
+        continue;
+       }else if(matcher.group(TokenType.HEXA.name()) != null){
+          tokens.add(new Token(TokenType.HEXA, matcher.group(TokenType.HEXA.name()), line,start,endChar));
+        continue;
+      }else if (matcher.group(TokenType.DECIMAL.name()) != null) {
+        tokens.add(new Token(TokenType.DECIMAL, matcher.group(TokenType.DECIMAL.name()), line,start,endChar));
         continue;
       }else if(matcher.group(TokenType.STRING.name()) != null){
           tokens.add(new Token(TokenType.STRING, matcher.group(TokenType.STRING.name()), line,start,endChar));
