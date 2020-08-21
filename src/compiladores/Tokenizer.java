@@ -14,6 +14,7 @@ public class Tokenizer{
         MULTILINE("/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/"),
         UNFINISHED("\\*/"),
         SINGLE("//.+"),
+        NEWLINE("\n"),
         WHITESPACE("[\\s]+"),
         RESERVED("void|int|double|bool|string|class|const|interface"
                 + "|null|this|for|while|foreach|if|else|return|break|New|NewArray"
@@ -26,7 +27,7 @@ public class Tokenizer{
         CHAR("\"[^\\r\\n]+\""),
         BINARYOP("\\+|\\-|\\*|/|%|<|<=|>|>=|=|==|!=|&&|\\|\\||!|;|,|\\.|\\[|\\]|\\(|\\)|\\{|\\}|\\[\\]|" +
             "\\(\\)|\\{\\}"),       
-        NEWLINE("\n|\r\n"),
+        
 
         UNRECOGNIZED(".");
         
@@ -62,7 +63,7 @@ public class Tokenizer{
             return String.format("*** Error line %s.*** Unrecognized char:  '%s'",
                     line, data);
         else if(type.name() =="UNFINISHED")
-            return String.format("*** Error line %s.*** UNFINISHED COMMENT",
+            return String.format("*** Error line %s.*** END OF COMMENT",
                     line, data);
         else
             return String.format( "%-20sline %s cols %s-%s is %s", data, 
