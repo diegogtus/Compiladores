@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -134,8 +135,20 @@ public class FrmPrimary extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBrowserActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        Lexer lexer = new Lexer();
-        lexer.tokenID(txta_input.getText());
+       // Tokenizer.Token token = new Tokenizer.Token();
+        
+        ArrayList<Tokenizer.Token> tokens = Lexer.lex(txta_input.getText());
+        for (Tokenizer.Token token : tokens){
+            if(token.type.name()== "UNRECOGNIZED"){
+              txta_output.append(token.toString()+ "\n");
+              System.out.println(token.type.name());
+          
+            }else
+             txta_output.append(token.toString()+ "\n");
+
+        }
+           
+        
         escribir();
     }//GEN-LAST:event_jButton2ActionPerformed
 private void leer() {
