@@ -21,15 +21,15 @@ public class Tokenizer{
                 + "|Console|WriteLine"),
         BOOLEAN("true|false"),
         ID("[a-zA-Z][\\w]*"),
-        DECIMAL("-?[0-9]+"), 
-        HEXA("0x[0-9a-fA-F]+|0X[0-9a-fA-F]+"),
         DOUBLE("[-+]?[0-9]+.|[-+]?[0-9]+.([0-9]+|(E|e)[-+]?[0-9]+|[0-9]+(E|e)[-+]?[0-9]+)"),
-        CHAR("\"[^\\r\\n]+\""),
+        HEXA("0x[0-9a-fA-F]+|0X[0-9a-fA-F]+"),
+        DECIMAL("-?[0-9]+"), 
+        STRING("\"[^\\r\\n]+\""),
         BINARYOP("\\+|\\-|\\*|/|%|<|<=|>|>=|=|==|!=|&&|\\|\\||!|;|,|\\.|\\[|\\]|\\(|\\)|\\{|\\}|\\[\\]|" +
             "\\(\\)|\\{\\}"),       
         
 
-        UNRECOGNIZED(".");
+        ERROR(".");
         
        
         
@@ -59,7 +59,7 @@ public class Tokenizer{
 
     @Override
     public String toString() {
-        if(type.name() =="UNRECOGNIZED")
+        if(type.name() =="ERROR")
             return String.format("*** Error line %s.*** Unrecognized char:  '%s'",
                     line, data);
         else if(type.name() =="UNFINISHED")
