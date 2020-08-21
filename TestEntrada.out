@@ -1,0 +1,15 @@
+public              line 1 cols 0-6 is ID
+void                line 1 cols 7-11 is RESERVED
+main                line 1 cols 12-16 is ID
+(                   line 1 cols 16-17 is BINARYOP
+)                   line 1 cols 17-18 is BINARYOP
+{                   line 1 cols 18-19 is BINARYOP
+int                 line 1 cols 21-24 is RESERVED
+variable1           line 1 cols 25-34 is ID
+=                   line 1 cols 35-36 is BINARYOP
+0                   line 1 cols 37-38 is DECIMAL
+String              line 1 cols 40-46 is ID
+variable1           line 1 cols 47-56 is ID
+=                   line 1 cols 57-58 is BINARYOP
+null                line 1 cols 59-63 is RESERVED
+}                   line 1 cols 64-65 is BINARYOP

@@ -43,8 +43,8 @@ public class Lexer {
       }else if(matcher.group(TokenType.ID.name()) != null){
           tokens.add(new Token(TokenType.ID, matcher.group(TokenType.ID.name()), line,start,endChar));
         continue;
-      }else if(matcher.group(TokenType.UNFINISHEDCOMMENT.name()) != null){
-          tokens.add(new Token(TokenType.UNFINISHEDCOMMENT, matcher.group(TokenType.UNFINISHEDCOMMENT.name()), line,start,endChar));
+      }else if(matcher.group(TokenType.UNOPENEDCOMMENT.name()) != null){
+          tokens.add(new Token(TokenType.UNOPENEDCOMMENT, matcher.group(TokenType.UNOPENEDCOMMENT.name()), line,start,endChar));
         continue;
       }else if(matcher.group(TokenType.DOUBLE.name()) != null){
           tokens.add(new Token(TokenType.DOUBLE, matcher.group(TokenType.DOUBLE.name()), line,start,endChar));
@@ -65,13 +65,13 @@ public class Lexer {
           line++;
           input = input.substring(endChar);
           matcher = tokenPatterns.matcher(input);
-          continue;
+          continue;/*
       }else if (matcher.group(TokenType.INVALIDID.name()) != null){
           tokens.add(new Token(TokenType.INVALIDID, matcher.group(TokenType.INVALIDID.name()), line, start,endChar));
         continue;
-      }else if (matcher.group(TokenType.UNFINISHEDSTRING.name()) != null){
-          tokens.add(new Token(TokenType.UNFINISHEDSTRING, matcher.group(TokenType.UNFINISHEDSTRING.name()), line, start,endChar));
-        continue;
+      }else if (matcher.group(TokenType.UNOPENEDSTRING.name()) != null){
+          tokens.add(new Token(TokenType.UNOPENEDSTRING, matcher.group(TokenType.UNOPENEDSTRING.name()), line, start,endChar));
+        continue;*/
       }else if (matcher.group(TokenType.UNCLOSEDSTRING.name()) != null){
           tokens.add(new Token(TokenType.UNCLOSEDSTRING, matcher.group(TokenType.UNCLOSEDSTRING.name()), line, start,endChar));
         continue;

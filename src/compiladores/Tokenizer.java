@@ -12,26 +12,26 @@ package compiladores;
 public class Tokenizer{
     public static enum TokenType {
         MULTILINE("/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/"),
-        UNFINISHEDCOMMENT("\\*/"),
-        SINGLE("//.+"),
+        UNOPENEDCOMMENT("\\.*\\*+/"),
+        SINGLE("//.*"),
         NEWLINE("\n"),
         WHITESPACE("[\\s]+"),
         RESERVED("void|int|double|bool|string|class|const|interface"
                 + "|null|this|for|while|foreach|if|else|return|break|New|NewArray"
                 + "|Console|WriteLine"),
+        UNCLOSEDSTRING("\"[^\r\n]+"),
         BOOLEAN("true|false"),
         ID("[a-zA-Z][\\w]*"),
+        STRING("\"[^\r\n]+\""),
+        //UNOPENEDSTRING("[^\r\n]+\""),
+        //INVALIDID("[0-9]+[a-z_A-Z]+"),
         DOUBLE("([\\-|\\+]?[0-9]+\\.[0-9]?[e|E][\\-|\\+]?[0-9]+)|([\\-|\\+]?[0-9]+\\.[0-9]+)|([\\-|\\+]?[0-9]+\\.)"),
         HEXA("0[x|X][0-9a-fA-F]+"),
         DECIMAL("-?[0-9]+"), 
-        STRING("\"[^\r\n]+\""),
+        UNCLOSEDCOMMENT("/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*"),
         BINARYOP("\\+|\\-|\\*|/|%|<|<=|>|>=|=|==|!=|&&|\\|\\||!|;|,|\\.|\\[|\\]|\\(|\\)|\\{|\\}|\\[\\]|" +
             "\\(\\)|\\{\\}"),  
         //UNFINISH_STRING("\""),
-        UNFINISHEDSTRING("\""),
-        UNCLOSEDSTRING("\"\\.+"),
-        UNCLOSEDCOMMENT("/\\*.+"),
-        INVALIDID("[0-9]+[\\w]+"),
         ERROR(".");
         
         public final String pattern;
@@ -67,13 +67,13 @@ public class Tokenizer{
             case "ERROR":
                 return String.format("*** Error line %s.*** Unrecognized char:  '%s'",
                         line, data);
-            case "UNFINISHEDCOMMENT":
+            case "UNOPENEDCOMMENT":
                 return String.format("*** Error line %s.***UNOPENED OF COMMENT",
                         line);
             case "INVALIDID":
                 return String.format("*** Error line %s.***INVALID ID",
                         line);            
-            case "UNFINISHEDSTRING":
+            case "UNOPENEDSTRING":
                 return String.format("*** Error line %s.***UNOPENED OF COMMENT",
                         line);
              case "UNCLOSEDCOMMENT":
