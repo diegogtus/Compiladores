@@ -24,9 +24,10 @@ public class Tokenizer{
         DOUBLE("([\\-|\\+]?[0-9]+\\.[0-9]?[e|E][\\-|\\+]?[0-9]+)|([\\-|\\+]?[0-9]+\\.[0-9]+)|([\\-|\\+]?[0-9]+\\.)"),
         HEXA("0[x|X][0-9a-fA-F]+"),
         DECIMAL("-?[0-9]+"), 
-        STRING("\"[^\\r\\n]+\""),
+        STRING("\"[^\r\n]+\""),
         BINARYOP("\\+|\\-|\\*|/|%|<|<=|>|>=|=|==|!=|&&|\\|\\||!|;|,|\\.|\\[|\\]|\\(|\\)|\\{|\\}|\\[\\]|" +
-            "\\(\\)|\\{\\}"),       
+            "\\(\\)|\\{\\}"),  
+//        UNFINISH_STRING("\""),
         ERROR(".");
         
         public final String pattern;
@@ -55,15 +56,29 @@ public class Tokenizer{
 
     @Override
     public String toString() {
-        if(type.name() =="ERROR")
-            return String.format("*** Error line %s.*** Unrecognized char:  '%s'",
-                    line, data);
-        else if(type.name() =="UNFINISHED")
-            return String.format("*** Error line %s.*** END OF COMMENT",
-                    line, data);
-        else
-            return String.format( "%-20sline %s cols %s-%s is %s", data, 
+        if(null ==type.name())
+            return String.format( "NULL %-20sline %s cols %s-%s is %s", data, 
                     line,charStart, charEnd, type.name());
+        else switch (type.name()) {
+            case "ERROR":
+                return String.format("*** Error line %s.*** Unrecognized char:  '%s'",
+                        line, data);
+            case "UNFINISH_STRING":
+                return String.format("*** Error line %s.*** UNCLOSED STRING",
+                        line, data);
+            case "UNFINISHED":
+                return String.format("*** Error line %s.*** END OF COMMENT",
+                        line, data);
+            case "ID":
+                if(data.length() > 31)
+                    return String.format("*** Error id too long.*** TRUNCATED %.31s ", data);
+                else
+                    return String.format( "%-20sline %s cols %s-%s is %s", data,
+                        line,charStart, charEnd, type.name());
+            default:
+                return String.format( "%-20sline %s cols %s-%s is %s", data,
+                        line,charStart, charEnd, type.name());
+        }
       
     }
 //    public String toString() {

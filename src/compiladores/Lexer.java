@@ -66,6 +66,9 @@ public class Lexer {
           input = input.substring(endChar);
           matcher = tokenPatterns.matcher(input);
           continue;
+//      }else if (matcher.group(TokenType.UNFINISH_STRING.name()) != null){
+//          tokens.add(new Token(TokenType.UNFINISH_STRING, matcher.group(TokenType.UNFINISH_STRING.name()), line, start,endChar));
+//        continue;
       }else if (matcher.group(TokenType.UNFINISHED.name()) != null){
           tokens.add(new Token(TokenType.UNFINISHED, matcher.group(TokenType.UNFINISHED.name()), line, start,endChar));
         continue;
