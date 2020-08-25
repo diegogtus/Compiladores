@@ -12,24 +12,25 @@ package compiladores;
 public class Tokenizer{
     public static enum TokenType {
         MULTILINE("/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/"),
-        UNOPENEDCOMMENT("\\.*\\*+/"),
+        UNOPENEDCOMMENT(".*\\*+/"),
         SINGLE("//.*"),
         NEWLINE("\n"),
         WHITESPACE("[\\s]+"),
         RESERVED("void|int|double|bool|string|class|const|interface"
                 + "|null|this|for|while|foreach|if|else|return|break|New|NewArray"
                 + "|Console|WriteLine"),
-        UNCLOSEDSTRING("\"[^\r\n]+"),
+        //UNCLOSEDSTRING("\"[^\r\n]+"),
         BOOLEAN("true|false"),
         ID("[a-zA-Z][\\w]*"),
         STRING("\"[^\r\n]+\""),
+        UNCLOSEDSTRING("\".*"),
         //UNOPENEDSTRING("[^\r\n]+\""),
         //INVALIDID("[0-9]+[a-z_A-Z]+"),
         DOUBLE("([\\-|\\+]?[0-9]+\\.[0-9]?[e|E][\\-|\\+]?[0-9]+)|([\\-|\\+]?[0-9]+\\.[0-9]+)|([\\-|\\+]?[0-9]+\\.)"),
         HEXA("0[x|X][0-9a-fA-F]+"),
         DECIMAL("-?[0-9]+"), 
         UNCLOSEDCOMMENT("/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*"),
-        BINARYOP("\\+|\\-|\\*|/|%|<|<=|>|>=|=|==|!=|&&|\\|\\||!|;|,|\\.|\\[|\\]|\\(|\\)|\\{|\\}|\\[\\]|" +
+        BINARYOP("\\+|\\-|\\*|/|%|<|<=|>|>=|=|==|!=|&&|\\|\\||!|;|,|\\.|\\(\\)|\\[|\\]|\\(|\\)|\\{|\\}|\\[\\]|" +
             "\\(\\)|\\{\\}"),  
         //UNFINISH_STRING("\""),
         ERROR(".");
@@ -73,9 +74,9 @@ public class Tokenizer{
             case "INVALIDID":
                 return String.format("*** Error line %s.***INVALID ID",
                         line);            
-            case "UNOPENEDSTRING":
-                return String.format("*** Error line %s.***UNOPENED OF COMMENT",
-                        line);
+//            case "UNOPENEDSTRING":
+//                return String.format("*** Error line %s.***UNOPENED OF COMMENT",
+//                        line);
              case "UNCLOSEDCOMMENT":
                 return String.format("*** EOF in comment line %s.***", line);
             case "UNCLOSEDSTRING":
