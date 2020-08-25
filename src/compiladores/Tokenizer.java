@@ -11,10 +11,14 @@ package compiladores;
  */
 public class Tokenizer{
     public static enum TokenType {
-        MULTILINE("/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/"),
+        NEWLINE("\n"),
+        //NEWLINEBEGIN()
+        MULTILINECOMMENTUNCLOSEDWITHNEWLINE("^/\\*.*\\n$"),
+        MULTILINECOMMENTUNOPPENDWITHNEWLINE("^.*\\*\\/$"),        
+        MULTILINE("/\\*([^*]|[\\r]|(\\*+([^*/]|[\\r])))*\\*+/"),
         UNOPENEDCOMMENT(".*\\*+/"),
         SINGLE("//.*"),
-        NEWLINE("\n"),
+        
         WHITESPACE("[\\s]+"),
         RESERVED("void|int|double|bool|string|class|const|interface"
                 + "|null|this|for|while|foreach|if|else|return|break|New|NewArray"
@@ -73,7 +77,10 @@ public class Tokenizer{
                         line);
             case "INVALIDID":
                 return String.format("*** Error line %s.***INVALID ID",
-                        line);            
+                        line);    
+            case "MULTILINECOMMENTUNCLOSEDWITHNEWLINE":
+                return String.format("reconocio comentario multilinea con salto al fina linea %s",
+                        line); 
 //            case "UNOPENEDSTRING":
 //                return String.format("*** Error line %s.***UNOPENED OF COMMENT",
 //                        line);

@@ -140,7 +140,7 @@ public class FrmPrimary extends javax.swing.JFrame {
         txta_output.setText("");
         ArrayList<Tokenizer.Token> tokens = Lexer.lex(txta_input.getText());
         for (Tokenizer.Token token : tokens){
-             txta_output.append(token.toString()+ "\n");
+             txta_output.append(token.toString()+ "\n"+"\n");
         }
            
         
