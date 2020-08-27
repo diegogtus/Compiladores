@@ -18,7 +18,6 @@ public class Lexer {
  public static ArrayList<Token> lex(String input) {
     // The tokens to return
     ArrayList<Token> tokens = new ArrayList<Token>();
-    int lineas = 0;
     int line=1;
     int start=0;
     int endChar=0;
@@ -78,25 +77,14 @@ public class Lexer {
         continue;
       }else if (matcher.group(TokenType.UNCLOSEDCOMMENT.name()) != null){
           tokens.add(new Token(TokenType.UNCLOSEDCOMMENT, matcher.group(TokenType.UNCLOSEDCOMMENT.name()), line, start,endChar));
-          line++;
         continue;
       }else if (matcher.group(TokenType.ERROR.name()) != null){
           tokens.add(new Token(TokenType.ERROR, matcher.group(TokenType.ERROR.name()), line, start,endChar));
         continue;
-      }else if (matcher.group(TokenType.WHITESPACE.name()) != null ||  
-              matcher.group(TokenType.SINGLE.name()) != null){   
+      }else if (matcher.group(TokenType.WHITESPACE.name()) != null || matcher.group(TokenType.MULTILINE.name()) != null || 
+              matcher.group(TokenType.SINGLE.name()) != null){
         continue;
-      }else if (matcher.group(TokenType.MULTILINE.name()) != null){
-          //line++;
-          continue;
-      }else if (matcher.group(TokenType.MULTILINECOMMENTUNCLOSEDWITHNEWLINE.name()) != null){
-          line++;
-          continue;
-      }else if (matcher.group(TokenType.MULTILINECOMMENTUNOPPENDWITHNEWLINE.name()) != null){
-          //line++;
-          continue;
       }
-       
     }
     return tokens;
   }    
