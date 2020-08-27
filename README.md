@@ -29,10 +29,24 @@ Al presionar el botón Analizar muestra un mensaje en el que indica que ha final
 y que generó el archivo con extensión ".out". También se muestra en pantalla en la columna 
 derecha el resultado del análisis léxico.
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+![](firstScreen.png)
 
-Please make sure to update tests as appropriate.
+![](secondScreen.png)
+
+![](thirdScreen.png)
+
+![](fourthScreen.png)
+
+## Release History
+
+* 1.0.0
+    * Stable: Lexer analyzer
+
+## Contributing
+Desarrollado por:
+
+Diego Dominguez – [@diegogtus](https://github.com/diegogtus) – alejandro.diego.gt@gmail.com
+Walter Rodriguez – [@WalterVRodriguezG](https://github.com/WalterVRodriguezG) 
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[Oracle Java SE](https://www.oracle.com/downloads/licenses/javase-license1.html)
