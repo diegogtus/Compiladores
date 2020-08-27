@@ -46,6 +46,7 @@ derecha el resultado del análisis léxico.
 Desarrollado por:
 
 Diego Dominguez – [@diegogtus](https://github.com/diegogtus) – alejandro.diego.gt@gmail.com
+
 Walter Rodriguez – [@WalterVRodriguezG](https://github.com/WalterVRodriguezG) 
 
 ## License
