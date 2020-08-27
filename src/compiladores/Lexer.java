@@ -81,9 +81,28 @@ public class Lexer {
       }else if (matcher.group(TokenType.ERROR.name()) != null){
           tokens.add(new Token(TokenType.ERROR, matcher.group(TokenType.ERROR.name()), line, start,endChar));
         continue;
-      }else if (matcher.group(TokenType.WHITESPACE.name()) != null || matcher.group(TokenType.MULTILINE.name()) != null || 
+      }else if (matcher.group(TokenType.WHITESPACE.name()) != null ||  
               matcher.group(TokenType.SINGLE.name()) != null){
         continue;
+      }
+      else if (matcher.group(TokenType.MULTILINE.name()) != null){
+//          line++;
+          String newInput = matcher.group(TokenType.MULTILINE.name());
+          newInput = newInput.substring(2, newInput.length()-2);
+          Matcher newMatcher = tokenPatterns.matcher(newInput);
+           //System.out.println(newMatcher.find());
+          while (newMatcher.find()) {
+             // System.out.println(newMatcher.group(TokenType.NEWLINE.name()));
+             if(newMatcher.group(TokenType.NEWLINE.name()) != null){
+                line++; 
+                continue;
+            }else if(newMatcher.group(TokenType.ID.name()) != null){
+                //tokens.add(new Token(TokenType.ID, matcher.group(TokenType.ID.name()), line,start,endChar));
+                System.out.println(newMatcher.group(TokenType.ID.name()));
+              continue;
+            }
+          }
+          continue;
       }
     }
     return tokens;

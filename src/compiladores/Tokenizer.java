@@ -14,7 +14,7 @@ public class Tokenizer{
         MULTILINE("/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/"),
         UNOPENEDCOMMENT(".*\\*+/"),
         SINGLE("//.*"),
-        NEWLINE("\n"),
+        NEWLINE("[\n]|[\\s]+\n"),
         WHITESPACE("[\\s]+"),
         RESERVED("void|int|double|bool|string|class|const|interface"
                 + "|null|this|for|while|foreach|if|else|return|break|New|NewArray"
