@@ -131,33 +131,36 @@ public class FrmPrimary extends javax.swing.JFrame {
            txtPath.setText(fc.getSelectedFile().getAbsolutePath());
            txta_input.setText("");
            jButton2.setEnabled(true);
-           leer();            
+           read();            
         }
     }//GEN-LAST:event_btnBrowserActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       // Tokenizer.Token token = new Tokenizer.Token();
+       String analizedFile = "";
         txta_output.setText("");
         ArrayList<Tokenizer.Token> tokens = Lexer.lex(txta_input.getText());
         for (Tokenizer.Token token : tokens){
-             txta_output.append(token.toString()+ "\n");
+             analizedFile = analizedFile + "\n" +token.toString();
+            if(token.type.name() == "ERROR"  | token.type.name() =="UNCLOSEDSTRING"
+                   | token.type.name() == "UNCLOSEDCOMMENT" | token.type.name() == "UNOPENEDCOMMENT" ){
+                txta_output.append(token.toString()+ "\n");
+            }else if(token.type.name() == "ID" && token.data.length() > 31 )
+                txta_output.append(token.toString()+ "\n");
         }
-           
-        
-        escribir();
+        write(analizedFile);
     }//GEN-LAST:event_jButton2ActionPerformed
-private void leer() {
-        File archivo = null;
+private void read() {
+        File file = null;
         FileReader fr = null;
         BufferedReader br = null;
         try {
 			// Apertura del fichero y creacion de BufferedReader para poder
 			// hacer una lectura comoda (disponer del metodo readLine()).
-                        archivo = new File (txtPath.getText());
+                        file = new File (txtPath.getText());
 			//archivo = new File(txtPath.getText());
-                        NombreArchivo=archivo.getName();
+                        NombreArchivo=file.getName();
                         NombreArchivo=NombreArchivo.replace(".txt", "");
-                        fr = new FileReader (archivo);
+                        fr = new FileReader (file);
 			br = new BufferedReader(fr);
 			// Lectura del fichero
 			String linea;
@@ -179,12 +182,12 @@ private void leer() {
            }
         }
     }
-private void escribir() {
+private void write(String analizedFile) {
         File fichero=new File(NombreArchivo+".out");//creando fichero txt en raiz
         PrintWriter writer;
         try{
             writer=new PrintWriter(fichero);
-            writer.print(txta_output.getText());//ingresado ecuacion
+            writer.print(analizedFile);//ingresado ecuacion
             writer.close();
             JOptionPane.showMessageDialog(null, 
                     "InfoBox: Se ha analizado con éxito el archivo y se ha "
