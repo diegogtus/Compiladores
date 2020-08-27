@@ -18,20 +18,22 @@ las líneas y columnas que se encuentran analizando.
 
 ```bash
 Pattern p = Pattern.compile("a*b");
- Matcher m = p.matcher("aaaaab");
- boolean b = m.matches();
+Matcher m = p.matcher("aaaaab");
+boolean b = m.matches();
 ```
 
 ##	Procedimiento	
 Al iniciar el programa, se debe cargar el archivo a analizar con extensión ".txt" o ".frag" 
-y al abrirlo muestra en la columna izquierda, el contenido del mismo tal cual se encuentra. 
-Al presionar el botón Analizar muestra un mensaje en el que indica que ha finalizado el análisis
-y que generó el archivo con extensión ".out". También se muestra en pantalla en la columna 
-derecha el resultado del análisis léxico.
 
 ![](firstScreen.png)
 
+Al abrirlo muestra en la columna izquierda, el contenido del mismo tal cual se encuentra. 
+
 ![](secondScreen.png)
+
+Al presionar el botón Analizar muestra un mensaje en el que indica que ha finalizado el análisis
+y que generó el archivo con extensión ".out". También se muestra en pantalla en la columna 
+derecha el resultado del análisis léxico.
 
 ![](thirdScreen.png)
 
