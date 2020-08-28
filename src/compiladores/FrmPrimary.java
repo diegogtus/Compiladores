@@ -143,9 +143,9 @@ public class FrmPrimary extends javax.swing.JFrame {
              analizedFile = analizedFile + "\n" +token.toString();
             if(token.type.name() == "ERROR"  | token.type.name() =="UNCLOSEDSTRING"
                    | token.type.name() == "UNCLOSEDCOMMENT" | token.type.name() == "UNOPENEDCOMMENT" ){
-                txta_output.append(token.toString()+ "\n");
-            }else if(token.type.name() == "ID" && token.data.length() > 31 )
-                txta_output.append(token.toString()+ "\n");
+                txta_output.append(token.toString()+ "\n\n");
+            }else if(token.type.name() == "ID" && token.data.length() == 31 )
+                txta_output.append(token.toString()+ "\n\n");
         }
         write(analizedFile);
     }//GEN-LAST:event_jButton2ActionPerformed
