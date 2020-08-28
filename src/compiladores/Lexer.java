@@ -23,10 +23,10 @@ public class Lexer {
     int endChar=0;
     int length=0;
     // Lexer logic begins here
-    StringBuffer tokenPatternsBuffer = new StringBuffer();
+    StringBuffer Patterns = new StringBuffer();
     for (TokenType tokenType : TokenType.values())
-      tokenPatternsBuffer.append(String.format("|(?<%s>%s)", tokenType.name(), tokenType.pattern));
-    Pattern tokenPatterns = Pattern.compile(new String(tokenPatternsBuffer.substring(1)));
+      Patterns.append(String.format("|(?<%s>%s)", tokenType.name(), tokenType.pattern));
+    Pattern tokenPatterns = Pattern.compile(new String(Patterns.substring(1)));
 
     // Begin matching tokens
     Matcher matcher = tokenPatterns.matcher(input);
