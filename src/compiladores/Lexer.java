@@ -41,7 +41,11 @@ public class Lexer {
           tokens.add(new Token(TokenType.BOOLEAN, matcher.group(TokenType.BOOLEAN.name()), line,start,endChar));
         continue;
       }else if(matcher.group(TokenType.ID.name()) != null){
-          tokens.add(new Token(TokenType.ID, matcher.group(TokenType.ID.name()), line,start,endChar));
+           System.out.println( matcher.group(TokenType.ID.name()));
+           if(matcher.group(TokenType.ID.name()).length() > 31) 
+                tokens.add(new Token(TokenType.ID, matcher.group(TokenType.ID.name()).substring(0, 31), line,start,endChar));
+            else
+                tokens.add(new Token(TokenType.ID, matcher.group(TokenType.ID.name()), line,start,endChar));
         continue;
       }else if(matcher.group(TokenType.UNOPENEDCOMMENT.name()) != null){
           tokens.add(new Token(TokenType.UNOPENEDCOMMENT, matcher.group(TokenType.UNOPENEDCOMMENT.name()), line,start,endChar));
@@ -96,11 +100,12 @@ public class Lexer {
              if(newMatcher.group(TokenType.NEWLINE.name()) != null){
                 line++; 
                 continue;
-            }else if(newMatcher.group(TokenType.ID.name()) != null){
-                //tokens.add(new Token(TokenType.ID, matcher.group(TokenType.ID.name()), line,start,endChar));
-                System.out.println(newMatcher.group(TokenType.ID.name()));
-              continue;
-            }
+             }
+//            }else if(newMatcher.group(TokenType.ID.name()) != null){
+//                //tokens.add(new Token(TokenType.ID, matcher.group(TokenType.ID.name()), line,start,endChar));
+//                System.out.println(newMatcher.group(TokenType.ID.name()));
+//              continue;
+//            }
           }
           continue;
       }

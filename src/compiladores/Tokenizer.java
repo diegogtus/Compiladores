@@ -62,7 +62,7 @@ public class Tokenizer{
     @Override
     public String toString() {
         if(null ==type.name())
-            return String.format( "NULL %-20sline %s cols %s-%s is %s", data, 
+            return String.format( "NULL %-35sline %s cols %s-%-5s is %s", data, 
                     line,charStart, charEnd, type.name());
         else switch (type.name()) {
             case "ERROR":
@@ -83,19 +83,17 @@ public class Tokenizer{
                 return String.format("*** EOF in string line %s.***",
                         line);
             case "ID":
-                String vTruncate = "";
-                if(data.length() > 31){ 
-                    vTruncate = data.substring(0, 31);
-                    //return String.format("*** Error line %s id too long.*** TRUNCATED %.31s ", line, data);
-                    //String vTruncate = "";
-                    return String.format( "%-20s line %s cols %s-%s is %s", vTruncate,
+                if(data.length() == 31){   
+//                    String truncated = "";
+//                    truncated = data.substring(0, 30);
+                    return String.format("*** Error line %s id too long.*** TRUNCATED %s \n %-35s line %s cols %s-%-5s is %s", line, data, data,
                         line,charStart, charEnd, type.name());
                 }
                 else
-                    return String.format( "%-20sline %s cols %s-%s is %s", data,
+                    return String.format( "%-35sline %s cols %s-%-5s is %s", data,
                         line,charStart, charEnd, type.name());
             default:
-                return String.format( "%-20sline %s cols %s-%s is %s", data,
+                return String.format( "%-35sline %s cols %s-%-5s is %s", data,
                         line,charStart, charEnd, type.name());
         }
       
