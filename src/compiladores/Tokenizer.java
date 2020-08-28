@@ -30,7 +30,7 @@ public class Tokenizer{
         HEXA("0[x|X][0-9a-fA-F]+"),
         DECIMAL("-?[0-9]+"), 
         UNCLOSEDCOMMENT("/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*"),
-        BINARYOP("\\+|\\-|\\*|/|%|<|<=|>|>=|=|==|!=|&&|\\|\\||!|;|,|\\.|\\(\\)|\\[|\\]|\\(|\\)|\\{|\\}|\\[\\]|" +
+        BINARYOP("\\+|\\-|\\*|/|%|<|<=|>|>=|=|==|!=|&&|\\|\\||!|;|:|,|\\.|\\(\\)|\\[|\\]|\\(|\\)|\\{|\\}|\\[\\]|" +
             "\\(\\)|\\{\\}"),  
         //UNFINISH_STRING("\""),
         ERROR(".");
@@ -83,8 +83,14 @@ public class Tokenizer{
                 return String.format("*** EOF in string line %s.***",
                         line);
             case "ID":
-                if(data.length() > 31)
-                    return String.format("*** Error line %s id too long.*** TRUNCATED %.31s ", line, data);
+                String vTruncate = "";
+                if(data.length() > 31){ 
+                    vTruncate = data.substring(0, 31);
+                    //return String.format("*** Error line %s id too long.*** TRUNCATED %.31s ", line, data);
+                    //String vTruncate = "";
+                    return String.format( "%-20s line %s cols %s-%s is %s", vTruncate,
+                        line,charStart, charEnd, type.name());
+                }
                 else
                     return String.format( "%-20sline %s cols %s-%s is %s", data,
                         line,charStart, charEnd, type.name());
