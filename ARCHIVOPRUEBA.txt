@@ -1,0 +1,9 @@
+while ( 12  ) # 
+	while ( false )
+		while ( 2 == 1 ) 
+			while ( true ) 
+				for ( 2 : 2 : 2)
+					while ( null );
+
+
+
