@@ -108,7 +108,11 @@ public class Tokenizer{
       this.charStart = charStart;
       this.charEnd = charEnd;
     }
-
+    
+    public String toError(){
+        return String.format( " %-35sline %s cols %s-%-5s", data,line,charStart, charEnd);
+    }
+    
     @Override
     public String toString() {
         if(null ==type.name())
@@ -124,9 +128,6 @@ public class Tokenizer{
             case "INVALIDID":
                 return String.format("*** Error line %s.***INVALID ID",
                         line);            
-//            case "UNOPENEDSTRING":
-//                return String.format("*** Error line %s.***UNOPENED OF COMMENT",
-//                        line);
              case "UNCLOSEDCOMMENT":
                 return String.format("*** EOF in comment line %s.***", line);
             case "UNCLOSEDSTRING":
@@ -134,8 +135,6 @@ public class Tokenizer{
                         line);
             case "ID":
                 if(data.length() == 31){   
-//                    String truncated = "";
-//                    truncated = data.substring(0, 30);
                     return String.format("*** Error line %s id too long.*** TRUNCATED %s \n %-35s line %s cols %s-%-5s is %s", line, data, data,
                         line,charStart, charEnd, type.name());
                 }

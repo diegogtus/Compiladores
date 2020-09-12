@@ -21,6 +21,50 @@ Pattern p = Pattern.compile("a*b");
 Matcher m = p.matcher("aaaaab");
 boolean b = m.matches();
 ```
+Utiliza la siguiente gramatica:
+```bash
+Stmt::= for | while | Expr ;
+
+for:== for ( <Expr> : Expr : <Expr> ) Stmt
+
+While:== while ( Expr ) Stmt
+
+Expr ::=Expr || ExprAND
+	|ExprAND
+
+ExprAND:== ExprAND && ExprEQUALS
+		|ExprEQUALS
+	
+ExprEQUALS::= ExprEQUALS == ExprREL
+		| ExprEQUALS != ExprREL
+		| ExprREL
+		
+ExprREL::= ExprREL >= ExprADD
+		| ExprREL <= ExprADD
+		| ExprREL > ExprADD
+		| ExprREL < ExprADD
+		| ExprADD
+			
+ExprADD::= ExprADD +  ExpMUL
+		|  ExprADD - ExpMUL
+		|  ExpMUL
+		
+ExpMUL::=  ExpMUL * ExpUN
+		| ExpMUL / ExpUN
+		| ExprMUL % ExpUN
+		|ExpUN
+		
+ExpUN:== -ExpUN ExpEXP
+	| ! ExpUN ExpEXP
+	| ExpEXP
+	
+ExpEXP:== ( Expr )
+		| Constant
+		|LValue
+		|this
+		|New(ident)
+		|LValue = Expr
+```
 
 ##	Procedimiento	
 Al iniciar el programa, se debe cargar el archivo a analizar con extensión ".txt" o ".frag" 
@@ -43,6 +87,10 @@ derecha el resultado del análisis léxico.
 
 * 1.0.0
     * Stable: Lexer analyzer
+* 1.1.1
+    * Stable: Se agregaron los dos puntos y la palabra reservada Print
+* 1.1.1
+    * Stable: Parser for-while-Exp
 
 ## Contributing
 Desarrollado por:

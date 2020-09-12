@@ -147,6 +147,14 @@ public class FrmPrimary extends javax.swing.JFrame {
             }else if(token.type.name() == "ID" && token.data.length() == 31 )
                 txta_output.append(token.toString()+ "\n\n");
         }
+        Parse parse = new Parse();
+        ArrayList<String> parser = parse.parse(tokens);
+        analizedFile = analizedFile + "\n\n\n" + "***PARSER ERRORS***";
+        for (String parserErrors : parser){
+            analizedFile = analizedFile + "\n" + parserErrors;
+            txta_output.append(parserErrors + "\n");
+            System.out.println(parserErrors);
+        }
         write(analizedFile);
     }//GEN-LAST:event_jButton2ActionPerformed
 private void read() {
