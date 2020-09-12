@@ -62,8 +62,90 @@ public class Lexer {
       }else if(matcher.group(TokenType.STRING.name()) != null){
           tokens.add(new Token(TokenType.STRING, matcher.group(TokenType.STRING.name()), line,start,endChar));
         continue;
-      } else if (matcher.group(TokenType.BINARYOP.name()) != null) {
-        tokens.add(new Token(TokenType.BINARYOP, matcher.group(TokenType.BINARYOP.name()), line, start,endChar));
+      } else if (matcher.group(TokenType.SYMADD.name()) != null) {
+        tokens.add(new Token(TokenType.SYMADD, matcher.group(TokenType.SYMADD.name()), line, start,endChar));
+        continue;
+       		 } else if (matcher.group(TokenType. SYMSUB.name()) != null) {
+        tokens.add(new Token(TokenType. SYMSUB, matcher.group(TokenType. SYMSUB.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYASTERISK.name()) != null) {
+        tokens.add(new Token(TokenType.SYASTERISK, matcher.group(TokenType.SYASTERISK.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYSLASH.name()) != null) {
+        tokens.add(new Token(TokenType.SYSLASH, matcher.group(TokenType.SYSLASH.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYPERCENTAGE.name()) != null) {
+        tokens.add(new Token(TokenType.SYPERCENTAGE, matcher.group(TokenType.SYPERCENTAGE.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYEQUALSLOWERTHAN.name()) != null) {
+        tokens.add(new Token(TokenType.SYEQUALSLOWERTHAN, matcher.group(TokenType.SYEQUALSLOWERTHAN.name()), line, start,endChar));
+        continue;      
+ } else if (matcher.group(TokenType.SYLOWERTHAN.name()) != null) {
+        tokens.add(new Token(TokenType.SYLOWERTHAN, matcher.group(TokenType.SYLOWERTHAN.name()), line, start,endChar));
+        continue;
+ 
+ } else if (matcher.group(TokenType.SYGRATERTHAN.name()) != null) {
+        tokens.add(new Token(TokenType.SYGRATERTHAN, matcher.group(TokenType.SYGRATERTHAN.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYGRATEREQUALSTHAN.name()) != null) {
+        tokens.add(new Token(TokenType.SYGRATEREQUALSTHAN, matcher.group(TokenType.SYGRATEREQUALSTHAN.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYEQUALS.name()) != null) {
+        tokens.add(new Token(TokenType.SYEQUALS, matcher.group(TokenType.SYEQUALS.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYDOBLEEQUALS.name()) != null) {
+        tokens.add(new Token(TokenType.SYDOBLEEQUALS, matcher.group(TokenType.SYDOBLEEQUALS.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYDIFERENT.name()) != null) {
+        tokens.add(new Token(TokenType.SYDIFERENT, matcher.group(TokenType.SYDIFERENT.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYAND.name()) != null) {
+        tokens.add(new Token(TokenType.SYAND, matcher.group(TokenType.SYAND.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYOR.name()) != null) {
+        tokens.add(new Token(TokenType.SYOR, matcher.group(TokenType.SYOR.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYADMIRATION.name()) != null) {
+        tokens.add(new Token(TokenType.SYADMIRATION, matcher.group(TokenType.SYADMIRATION.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYSEMICOLON.name()) != null) {
+        tokens.add(new Token(TokenType.SYSEMICOLON, matcher.group(TokenType.SYSEMICOLON.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYCOLON.name()) != null) {
+        tokens.add(new Token(TokenType.SYCOLON, matcher.group(TokenType.SYCOLON.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYCOMMA.name()) != null) {
+        tokens.add(new Token(TokenType.SYCOMMA, matcher.group(TokenType.SYCOMMA.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYDOT.name()) != null) {
+        tokens.add(new Token(TokenType.SYDOT, matcher.group(TokenType.SYDOT.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYPARENTESIS.name()) != null) {
+        tokens.add(new Token(TokenType.SYPARENTESIS, matcher.group(TokenType.SYPARENTESIS.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYBRAKETOPEN.name()) != null) {
+        tokens.add(new Token(TokenType.SYBRAKETOPEN, matcher.group(TokenType.SYBRAKETOPEN.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYBRAKETCLOSE.name()) != null) {
+        tokens.add(new Token(TokenType.SYBRAKETCLOSE, matcher.group(TokenType.SYBRAKETCLOSE.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYOPENPARENTHESES.name()) != null) {
+        tokens.add(new Token(TokenType.SYOPENPARENTHESES, matcher.group(TokenType.SYOPENPARENTHESES.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYCLOSEPARENTHESES.name()) != null) {
+        tokens.add(new Token(TokenType.SYCLOSEPARENTHESES, matcher.group(TokenType.SYCLOSEPARENTHESES.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYOPENCURLYBRAKET.name()) != null) {
+        tokens.add(new Token(TokenType.SYOPENCURLYBRAKET, matcher.group(TokenType.SYOPENCURLYBRAKET.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYCLOSECURLYBRAKET.name()) != null) {
+        tokens.add(new Token(TokenType.SYCLOSECURLYBRAKET, matcher.group(TokenType.SYCLOSECURLYBRAKET.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYSQUAREBRAKET.name()) != null) {
+        tokens.add(new Token(TokenType.SYSQUAREBRAKET, matcher.group(TokenType.SYSQUAREBRAKET.name()), line, start,endChar));
+        continue;
+ } else if (matcher.group(TokenType.SYCURLYBRAKET.name()) != null) {
+        tokens.add(new Token(TokenType.SYCURLYBRAKET, matcher.group(TokenType.SYCURLYBRAKET.name()), line, start,endChar));
         continue;
       } else if(matcher.group(TokenType.NEWLINE.name()) != null){
           line++;
