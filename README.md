@@ -54,8 +54,8 @@ ExpMUL::=  ExpMUL * ExpUN
 		| ExprMUL % ExpUN
 		|ExpUN
 		
-ExpUN:== -ExpUN ExpEXP
-	| ! ExpUN ExpEXP
+ExpUN:== - ExpEXP
+	| !ExpEXP
 	| ExpEXP
 	
 ExpEXP:== ( Expr )
@@ -64,6 +64,56 @@ ExpEXP:== ( Expr )
 		|this
 		|New(ident)
 		|LValue = Expr
+
+*********Recursividad a la izquierda eliminada**********
+Expr::= ExprAND Expr´
+
+Expr´::= || ExprAND Expr´
+		| Ɛ
+
+ExprAND::=ExprEQUALS ExprAND´
+
+ExprAND´::= &&  ExprEQUALS ExprAND´
+		| Ɛ
+
+ExprEQUALS::= ExprREL ExprEQUALS´
+
+ExprEQUALS´::= == ExprREL ExprEQUALS´
+			| != ExprREL ExprEQUALS´
+			| Ɛ
+
+ExprREL::= ExprADD ExprREL´
+
+ExprREL´::= >= ExprADD ExprREL´
+		|<= ExprADD ExprREL´
+		|> ExprADD ExprREL´
+		|< ExprADD ExprREL´
+		| Ɛ
+
+ExprADD ::= ExprMUL ExprADD´
+
+ExprADD´ ::= + ExprMUL ExprADD´
+		| - ExprMUL ExprADD´
+		| Ɛ
+
+ExpMUL::= ExpUN ExpMUL´
+
+ExpMUL´::= * ExpUN ExpMUL´
+		| / ExpUN ExpMUL´
+		| % ExpUN ExpMUL´
+		| Ɛ
+
+ExpUN::= - ExpEXP
+	| !ExpEXP
+	| ExpEXP
+
+ExpEXP:== ( Expr )
+		| Expr [Expr ]
+		| Constant
+		|LValue
+		|this
+		|New(ident)
+		
 ```
 
 ##	Procedimiento	

@@ -155,8 +155,10 @@ public class FrmPrimary extends javax.swing.JFrame {
        String analizedFile = "";
         txta_output.setText("");
         ArrayList<Tokenizer.Token> tokens = Lexer.lex(txta_input.getText());
-        txta_output.append("***PARSER TOKENIZER ERRORS**\n");
+        
+            txta_output.append("***TOKENIZER ERRORS**\n");
         for (Tokenizer.Token token : tokens){
+            analizedFile = analizedFile +  "***TOKENIZER ERRORS**\n";
              analizedFile = analizedFile + "\n" +token.toString();         
             if(token.type.name() == "ERROR"  | token.type.name() =="UNCLOSEDSTRING"
                    | token.type.name() == "UNCLOSEDCOMMENT" | token.type.name() == "UNOPENEDCOMMENT" ){
@@ -166,12 +168,13 @@ public class FrmPrimary extends javax.swing.JFrame {
         }
         Parse parse = new Parse();
         ArrayList<String> parser = parse.parse(tokens);
-        txta_output.append("\n\n\n***PARSER ERRORS***\n");
-        analizedFile = analizedFile + "\n\n\n" + "***PARSER ERRORS***";
+        if(!parser.isEmpty()){
+            txta_output.append("\n\n\n***PARSER ERRORS***\n");
+            analizedFile = analizedFile + "\n\n\n" + "***PARSER ERRORS***";
+        }
         for (String parserErrors : parser){
             analizedFile = analizedFile + "\n" + parserErrors;
             txta_output.append(parserErrors + "\n");
-            System.out.println(parserErrors);
         }
         write(analizedFile);
     }//GEN-LAST:event_jButton2ActionPerformed

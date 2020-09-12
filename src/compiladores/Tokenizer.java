@@ -112,11 +112,13 @@ public class Tokenizer{
     public String toError(){
         return String.format( " %-35sline %s cols %s-%-5s", data,line,charStart, charEnd);
     }
-    
+    public String getLine(){
+        return String.format(" %-14sline %s cols %s-%-5s", "",line,charStart, charEnd);
+    }
     @Override
     public String toString() {
         if(null ==type.name())
-            return String.format( "NULL %-35sline %s cols %s-%-5s is %s", data, 
+            return String.format( "NULL %-14sline %s cols %s-%-5s is %s", data, 
                     line,charStart, charEnd, type.name());
         else switch (type.name()) {
             case "ERROR":

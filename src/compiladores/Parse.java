@@ -16,6 +16,8 @@ import java.util.Arrays;
 public class Parse{
         ArrayList<String> error; 
         Tokenizer.Token Token;
+        String structure;
+        boolean optionalTructure = false;
     public Parse() {
         error = new ArrayList<String>();
     }
@@ -31,10 +33,12 @@ public class Parse{
         switch (token.get(0).type) {
            case WHILE:
                token.remove(0);
+               structure = "WHILE";
                WHILE(token);
                break;
            case FOR:
                token.remove(0);
+               structure = "FOR";
                FOR(token);
                break;
            case SYSEMICOLON:
@@ -53,17 +57,19 @@ public class Parse{
                 case SYOPENPARENTHESES:
                         token.remove(0);
                             if(token.size()!= 0){
+                                optionalTructure = true;
                                 EXPR(token);
                                 switch(token.get(0).type) {
-                                    
                                     case SYCOLON:
                                         token.remove(0);
                                         if(token.size()!= 0){
+                                            optionalTructure = false;
                                             EXPR(token);
                                             switch(token.get(0).type) {
                                                 case SYCOLON:
                                                     token.remove(0);
                                                     if(token.size()!= 0){
+                                                        optionalTructure = true;
                                                         EXPR(token);
                                                         switch(token.get(0).type) {
                                                         case SYCLOSEPARENTHESES:
@@ -105,9 +111,9 @@ public class Parse{
         if(token.size()!= 0){
             switch(token.get(0).type) {
                 case SYOPENPARENTHESES:
-                    token.remove(0);
-                    EXPR(token);
+                    token.remove(0);                    
                     if(token.size()!= 0){
+                        EXPR(token);
                          switch(token.get(0).type) {
                         case SYCLOSEPARENTHESES:
                             token.remove(0);
@@ -131,184 +137,155 @@ public class Parse{
             error.add("Illegal WHILE structure");
     }
     public void EXPR (ArrayList<Tokenizer.Token> token){
-        if(token.size()!= 0){
-            if(token.get(1).type == Tokenizer.TokenType.SYOR){
-                token.remove(0);
-                EXPR(token);
-            }
-            
-            switch(token.get(0).type) {
-                case SYOR:
-                    token.remove(0);
-                    EXPRAND(token);
-                    break;
-                default:
-                    EXPRAND(token);
-                    break;
-            }
-        }else
-            error.add("Illegal EXPRESION structure");
+        EXPRAND(token);
+        EXPRp(token);
     }
-     public void EXPRAND (ArrayList<Tokenizer.Token> token){
-        if(token.size()!= 0){
-            if(token.get(1).type == Tokenizer.TokenType.SYAND){
-                EXPR(token);
+      public void EXPRp (ArrayList<Tokenizer.Token> token){
+        switch(token.get(0).type){
+            case SYOR:
                 EXPRAND(token);
-            }
-            
-            switch(token.get(0).type) {
-                case SYAND:
-                    token.remove(0);
-                    EXPREQUALS(token);
-                    break;
-                default:
-                        EXPREQUALS(token);
-                    break;
-                    
-            }
-        }else
-            error.add("Illegal EXPRESION AND structure");
+                EXPRp(token);
+                break;
+            default:
+                break;
+        }
     }
-    public void EXPREQUALS(ArrayList<Tokenizer.Token> token){
-        if(!token.isEmpty()){
-           if(token.get(1).type == Tokenizer.TokenType.SYDOUBLEEQUALS || token.get(1).type == Tokenizer.TokenType.SYDIFERENT){
-               token.remove(0);
-           EXPREQUALS(token);
-           }
-            switch(token.get(0).type) {
-                case SYDOUBLEEQUALS:
-                    token.remove(0);
-                    EXPRREL(token);
-                    break;
-                case SYDIFERENT:
-                    token.remove(0);
-                    EXPRREL(token);
-                    break;
-                default:
-                    EXPRREL(token);
-                    break;
-            }
-        }else
-            error.add("Illegal EXPRESION EQUALS structure");
+    public void EXPRAND (ArrayList<Tokenizer.Token> token){
+        EXPREQUALS(token);
+        EXPRANDp(token);
     }
-     public void EXPRREL (ArrayList<Tokenizer.Token> token){
-        if(token.size()!= 0){
-           if(token.get(1).type == Tokenizer.TokenType.SYEQUALSLOWERTHAN || 
-                   token.get(1).type == Tokenizer.TokenType.SYGRATEREQUALSTHAN ||
-                   token.get(1).type == Tokenizer.TokenType.SYGRATERTHAN ||
-                   token.get(1).type == Tokenizer.TokenType.SYLOWERTHAN){
-               token.remove(0);
-               EXPRREL(token);
-           }
-           
-            switch(token.get(0).type) {
-                case SYAND:
-                    token.remove(0);
-                    EXPRADD(token);
-                    break;
-                case SYGRATEREQUALSTHAN:
-                    token.remove(0);
-                    EXPRADD(token);
-                    break;
-                case SYEQUALSLOWERTHAN:
-                    token.remove(0);
-                    EXPRADD(token);
-                    break;
-                case SYGRATERTHAN:
-                    token.remove(0);
-                    EXPRADD(token);
-                    break;
-                case SYLOWERTHAN:
-                    token.remove(0);
-                    EXPRADD(token);
-                    break;
-                default:
-                    EXPRADD(token);
-                    break;
-            }
-        }else
-            error.add("Illegal EXPRESION REL structure");
-    }
-      public void EXPRADD(ArrayList<Tokenizer.Token> token){
-        if(token.size()!= 0){
-           if(token.get(1).type == Tokenizer.TokenType.SYMADD || 
-                   token.get(1).type == Tokenizer.TokenType.SYMSUB){
-               token.remove(0);
-               EXPRADD(token);
-           }
-           
-            switch(token.get(0).type ) {
-                case SYMADD:
-                    token.remove(0);
-                    EXPRMUL(token);
-                    break;
-                case SYMSUB:
-                   token.remove(0);
-                    EXPRMUL(token);
-                    break;
-                default:
-                    EXPRMUL(token);
-                    break;
-            }
-        }else
-            error.add("Illegal EXPRESION ADD structure");
-    }
-      
-     public void EXPRMUL(ArrayList<Tokenizer.Token> token){
-        if(token.size()!= 0){
-          if(token.get(1).type == Tokenizer.TokenType.SYASTERISK ||
-                  token.get(1).type == Tokenizer.TokenType.SYSLASH ||
-                  token.get(1).type == Tokenizer.TokenType.SYPERCENTAGE){
+    public void EXPRANDp (ArrayList<Tokenizer.Token> token){
+        switch(token.get(0).type){
+            case SYAND:
                 token.remove(0);
-            EXPRMUL(token);
-          }
-            switch(token.get(0).type) {
-                case SYASTERISK :
-                    token.remove(0);
-                    EXPRUN(token);
-                    break;
-                case SYSLASH:
-                   token.remove(0);
-                    EXPRUN(token);
-                    break;
-                case SYPERCENTAGE:
-                   token.remove(0);
-                    EXPRUN(token);
-                    break;
-                default:
-                    EXPRUN(token);
-                    break;
-            }
-        }else
-            error.add("Illegal EXPRESION MUL structure");
+                EXPREQUALS(token);
+                EXPRANDp(token);
+                break;
+            default:
+                break;
+        }
     }
-     public void EXPRUN(ArrayList<Tokenizer.Token> token){
-        if(token.size()!= 0){
-            switch(token.get(0).type) {
-                case SYMSUB:
-                    token.remove(0);
-                    EXPREXP(token);
-                    break;
-                case SYADMIRATION:
-                    token.remove(0);
-                    EXPREXP(token);
-                    break;
-                default:
-                    EXPREXP(token);
-                    break;
-            }
-        }else
-            error.add("Illegal EXPRESION ADD structure");
+    public void EXPREQUALS (ArrayList<Tokenizer.Token> token){
+          EXPRREL(token);
+          EXPREQUALSp(token);
+    }
+    public void EXPREQUALSp (ArrayList<Tokenizer.Token> token){
+        switch(token.get(0).type){
+            case SYDOUBLEEQUALS:
+                token.remove(0);
+                EXPRREL(token);
+                EXPREQUALSp(token);
+                break;
+            case SYDIFERENT:
+                token.remove(0);
+                EXPRREL(token);
+                EXPREQUALSp(token);
+                break;
+            default:
+                break;
+        }
+    }
+    public void EXPRREL (ArrayList<Tokenizer.Token> token){
+          EXPRADD(token);
+          EXPRRELp(token);
+    }
+    public void EXPRRELp (ArrayList<Tokenizer.Token> token){
+        switch(token.get(0).type){
+            case SYGRATEREQUALSTHAN:
+                token.remove(0);
+                EXPRADD(token);
+                EXPRRELp(token);
+                break;
+            case SYEQUALSLOWERTHAN:
+                token.remove(0);
+                EXPRADD(token);
+                EXPRRELp(token);
+                break;
+            case SYLOWERTHAN:
+                token.remove(0);
+                EXPRADD(token);
+                EXPRRELp(token);
+                break;
+            case SYGRATERTHAN:
+                token.remove(0);
+                EXPRADD(token);
+                EXPRRELp(token);
+                break;
+            default:
+                break;
+        }
+    }
+    
+    public void EXPRADD (ArrayList<Tokenizer.Token> token){
+          EXPRMUL(token);
+          EXPRADDp(token);
+    }
+    public void EXPRADDp (ArrayList<Tokenizer.Token> token){
+        switch(token.get(0).type){
+            case SYMADD:
+                token.remove(0);
+                EXPRMUL(token);
+                EXPRADDp(token);
+                break;
+            case SYMSUB:
+                token.remove(0);
+                EXPRMUL(token);
+                EXPRADDp(token);
+                break;
+            default:
+                break;
+        }
+    }
+    public void EXPRMUL (ArrayList<Tokenizer.Token> token){
+          EXPRUN(token);
+          EXPRMULp(token);
+    }
+    public void EXPRMULp (ArrayList<Tokenizer.Token> token){
+        switch(token.get(0).type){
+            case SYASTERISK:
+                token.remove(0);
+                EXPRUN(token);
+                EXPRMULp(token);
+                break;
+            case SYSLASH:
+                token.remove(0);
+                EXPRUN(token);
+                EXPRMULp(token);
+                break;
+             case SYPERCENTAGE:
+                token.remove(0);
+                EXPRUN(token);
+                EXPRMULp(token);
+                break;
+            default:
+                break;
+        }
+    }
+    public void EXPRUN (ArrayList<Tokenizer.Token> token){
+         switch(token.get(0).type){
+             case SYMSUB:
+                token.remove(0);
+                EXPREXP(token);
+                break;
+            case SYADMIRATION:
+                token.remove(0);
+                EXPREXP(token);
+                break;
+            default:
+                EXPREXP(token);
+                break;
+        } 
     }
      public void EXPREXP(ArrayList<Tokenizer.Token> token){
         if(token.size()!= 0){
             switch(token.get(0).type) {
                 case SYOPENPARENTHESES:
                     token.remove(0);
-                    EXPREXP(token);
                     if(token.size()!= 0){
+                        EXPR(token);
                         switch(token.get(0).type) {
                             case SYCLOSEPARENTHESES:
+                                token.remove(0);
                                 break;
                             default:
                                 error.add("Illegal EXPRESION EXP structure: " + token.get(0).toError());
@@ -320,8 +297,45 @@ public class Parse{
                 case THIS:
                     token.remove(0);
                     break;
+                case NEW:
+                    token.remove(0);
+                    if(token.size()!= 0){
+                        switch(token.get(0).type){
+                            case SYOPENPARENTHESES:
+                                token.remove(0);
+                                if(token.size()!= 0){
+                                    switch(token.get(0).type){
+                                        case ID:
+                                            token.remove(0);
+                                            if(token.size()!= 0){
+                                                    switch(token.get(0).type){
+                                                        case SYCLOSEPARENTHESES:
+                                                            token.remove(0);
+                                                            break;
+                                                         default:
+                                                            error.add("Illegal EXPRESION EXP structure: " + token.get(0).toError());
+                                                            break;
+                                                    }
+                                            }
+                                            break;
+                                         default:
+                                            error.add("Illegal EXPRESION EXP structure: " + token.get(0).toError());
+                                            break;
+                                    }
+                                }else
+                                    error.add("Illegal EXPRESION EXP structure");
+                                break;
+                            default:
+                                error.add("Illegal EXPRESION EXP structure: " + token.get(0).toError());
+                                break;
+                        }
+                      
+                    }else
+                        error.add("Illegal EXPRESION EXP structure");
+                    break;
                 default:
-                    CONSTANT(token);
+                   
+                   CONSTANT(token);
                     break;
             }
         }else
@@ -335,87 +349,25 @@ public class Parse{
                     break;
                 case DOUBLE:
                     token.remove(0);
-                    if(token.get(0).type == Tokenizer.TokenType.SYASTERISK ||
-                  token.get(0).type == Tokenizer.TokenType.SYSLASH ||
-                  token.get(0).type == Tokenizer.TokenType.SYPERCENTAGE || token.get(0).type == Tokenizer.TokenType.SYMADD || 
-                   token.get(0).type == Tokenizer.TokenType.SYMSUB || token.get(0).type == Tokenizer.TokenType.SYEQUALSLOWERTHAN || 
-                   token.get(0).type == Tokenizer.TokenType.SYGRATEREQUALSTHAN ||
-                   token.get(0).type == Tokenizer.TokenType.SYGRATERTHAN ||
-                   token.get(0).type == Tokenizer.TokenType.SYLOWERTHAN || token.get(0).type == Tokenizer.TokenType.SYDOUBLEEQUALS || token.get(0).type == Tokenizer.TokenType.SYDIFERENT ||
-                            token.get(0).type == Tokenizer.TokenType.SYOR ||token.get(0).type == Tokenizer.TokenType.SYAND ){
-                    EXPR(token);
-                    }else if(token.get(0).type == Tokenizer.TokenType.SYCLOSEPARENTHESES){
-                        token.remove(0);
-                       STATEMENT(token);} 
-                    else
                     break;
                 case HEXA:
                     token.remove(0);
-                    if(token.get(0).type == Tokenizer.TokenType.SYASTERISK ||
-                  token.get(0).type == Tokenizer.TokenType.SYSLASH ||
-                  token.get(0).type == Tokenizer.TokenType.SYPERCENTAGE || token.get(0).type == Tokenizer.TokenType.SYMADD || 
-                   token.get(0).type == Tokenizer.TokenType.SYMSUB || token.get(0).type == Tokenizer.TokenType.SYEQUALSLOWERTHAN || 
-                   token.get(0).type == Tokenizer.TokenType.SYGRATEREQUALSTHAN ||
-                   token.get(0).type == Tokenizer.TokenType.SYGRATERTHAN ||
-                   token.get(0).type == Tokenizer.TokenType.SYLOWERTHAN || token.get(0).type == Tokenizer.TokenType.SYDOUBLEEQUALS || token.get(0).type == Tokenizer.TokenType.SYDIFERENT ||
-                            token.get(0).type == Tokenizer.TokenType.SYOR ||token.get(0).type == Tokenizer.TokenType.SYAND ){
-                    EXPR(token);
-                    }else if(token.get(0).type == Tokenizer.TokenType.SYCLOSEPARENTHESES){
-                        token.remove(0);
-                       STATEMENT(token);} 
-                    else
-                    break;
                 case DECIMAL:
                     token.remove(0);
-                    if( token.size()!= 0 && (token.get(0).type == Tokenizer.TokenType.SYASTERISK ||
-                  token.get(0).type == Tokenizer.TokenType.SYSLASH ||
-                  token.get(0).type == Tokenizer.TokenType.SYPERCENTAGE || token.get(0).type == Tokenizer.TokenType.SYMADD || 
-                   token.get(0).type == Tokenizer.TokenType.SYMSUB || token.get(0).type == Tokenizer.TokenType.SYEQUALSLOWERTHAN || 
-                   token.get(0).type == Tokenizer.TokenType.SYGRATEREQUALSTHAN ||
-                   token.get(0).type == Tokenizer.TokenType.SYGRATERTHAN ||
-                   token.get(0).type == Tokenizer.TokenType.SYLOWERTHAN || token.get(0).type == Tokenizer.TokenType.SYDOUBLEEQUALS || token.get(0).type == Tokenizer.TokenType.SYDIFERENT ||
-                            token.get(0).type == Tokenizer.TokenType.SYOR ||token.get(0).type == Tokenizer.TokenType.SYAND )){
-                    EXPR(token);
-                    }else if(token.get(0).type == Tokenizer.TokenType.SYCLOSEPARENTHESES){
-                        token.remove(0);
-                       STATEMENT(token);} 
-                    else
-                        break;
+                     break;
                 case STRING:
                     token.remove(0);
-                    if(token.get(0).type == Tokenizer.TokenType.SYASTERISK ||
-                  token.get(0).type == Tokenizer.TokenType.SYSLASH ||
-                  token.get(0).type == Tokenizer.TokenType.SYPERCENTAGE || token.get(0).type == Tokenizer.TokenType.SYMADD || 
-                   token.get(0).type == Tokenizer.TokenType.SYMSUB || token.get(0).type == Tokenizer.TokenType.SYEQUALSLOWERTHAN || 
-                   token.get(0).type == Tokenizer.TokenType.SYGRATEREQUALSTHAN ||
-                   token.get(0).type == Tokenizer.TokenType.SYGRATERTHAN ||
-                   token.get(0).type == Tokenizer.TokenType.SYLOWERTHAN || token.get(0).type == Tokenizer.TokenType.SYDOUBLEEQUALS || token.get(0).type == Tokenizer.TokenType.SYDIFERENT ||
-                            token.get(0).type == Tokenizer.TokenType.SYOR ||token.get(0).type == Tokenizer.TokenType.SYAND ){
-                    EXPR(token);
-                    }else if(token.get(0).type == Tokenizer.TokenType.SYCLOSEPARENTHESES){
-                        token.remove(0);
-                       STATEMENT(token);} 
-                    else
                     break;
                 case BOOLEAN:
                     token.remove(0);
-                    if(token.get(0).type == Tokenizer.TokenType.SYASTERISK ||
-                  token.get(0).type == Tokenizer.TokenType.SYSLASH ||
-                  token.get(0).type == Tokenizer.TokenType.SYPERCENTAGE || token.get(0).type == Tokenizer.TokenType.SYMADD || 
-                   token.get(0).type == Tokenizer.TokenType.SYMSUB || token.get(0).type == Tokenizer.TokenType.SYEQUALSLOWERTHAN || 
-                   token.get(0).type == Tokenizer.TokenType.SYGRATEREQUALSTHAN ||
-                   token.get(0).type == Tokenizer.TokenType.SYGRATERTHAN ||
-                   token.get(0).type == Tokenizer.TokenType.SYLOWERTHAN || token.get(0).type == Tokenizer.TokenType.SYDOUBLEEQUALS || token.get(0).type == Tokenizer.TokenType.SYDIFERENT ||
-                            token.get(0).type == Tokenizer.TokenType.SYOR ||token.get(0).type == Tokenizer.TokenType.SYAND ){
-                    EXPR(token);
-                    }else if(token.get(0).type == Tokenizer.TokenType.SYCLOSEPARENTHESES){
-                        token.remove(0);
-                       STATEMENT(token);} 
-                    else
                     break;
+                case ID:
+                       token.remove(0);
+                       break;
                 default:
-                    error.add("Illegal EXPRESION CONSTANT structure "+ token.get(0).toError());
-                    token.remove(0);
+                    if(!optionalTructure)                        
+                        error.add("Missing expression inside structure " +structure +token.get(0).getLine());
+                    optionalTructure = false;
                     break;
             }
         }else
