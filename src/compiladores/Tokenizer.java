@@ -20,6 +20,7 @@ public class Tokenizer{
         /*RESERVED("void|int|double|bool|string|class|const|interface"
                 + "|null|this|for|while|foreach|if|else|return|break|New|NewArray"
                 + "|Console|WriteLine"),*/
+        PRINT("Print"),
         VOID("void"),
         INTERFACE("interface"),
         INT("int"),
