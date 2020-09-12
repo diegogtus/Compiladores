@@ -5,6 +5,11 @@
  */
 package compiladores;
 
+import static compiladores.Tokenizer.TokenType.ERROR;
+import static compiladores.Tokenizer.TokenType.SYCLOSEPARENTHESES;
+import static compiladores.Tokenizer.TokenType.SYCOLON;
+import static compiladores.Tokenizer.TokenType.SYEQUALS;
+import static compiladores.Tokenizer.TokenType.SYSEMICOLON;
 import java.awt.List;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +22,7 @@ public class Parse{
         ArrayList<String> error; 
         Tokenizer.Token Token;
         String structure;
-        boolean optionalTructure = false;
+        boolean optionalTructure = true;
     public Parse() {
         error = new ArrayList<String>();
     }
@@ -45,8 +50,16 @@ public class Parse{
                token.remove(0);
                break;
            default:
-               error.add("Illegal statement: " +  token.get(0).toError());
-               token.remove(0);
+               if(token.get(0).type == ERROR ){
+                    error.add("Illegal statement: " +  token.get(0).toError());
+                    token.remove(0);
+                    break;
+               }
+               EXPR(token);
+               if(token.get(0).type == SYSEMICOLON)
+                   token.remove(0);
+               else
+                   error.add("Missing semicolon" +  token.get(0).getLine());
                break;
         } 
     }
@@ -60,13 +73,13 @@ public class Parse{
                                 optionalTructure = true;
                                 EXPR(token);
                                 switch(token.get(0).type) {
-                                    case SYCOLON:
+                                    case SYSEMICOLON:
                                         token.remove(0);
                                         if(token.size()!= 0){
                                             optionalTructure = false;
                                             EXPR(token);
                                             switch(token.get(0).type) {
-                                                case SYCOLON:
+                                                case SYSEMICOLON:
                                                     token.remove(0);
                                                     if(token.size()!= 0){
                                                         optionalTructure = true;
@@ -88,6 +101,7 @@ public class Parse{
                                                     break;
                                                 default:
                                                     error.add("Illegal FOR structure: " + token.get(0).toError());
+                                                     findParenthesis(token);
                                                     break;    
                                             }
                                         }else
@@ -95,6 +109,7 @@ public class Parse{
                                         break;
                                     default:
                                         error.add("Illegal FOR structure: " + token.get(0).toError());
+                                        findParenthesis(token);
                                         break;
                                 }
                             }else
@@ -107,6 +122,12 @@ public class Parse{
         }else
             error.add("Illegal FOR structure");
      }
+    public void findParenthesis (ArrayList<Tokenizer.Token> token){
+    while(token.get(0).type != SYCLOSEPARENTHESES){
+        token.remove(0);
+    }
+      token.remove(0);
+}
     public void WHILE (ArrayList<Tokenizer.Token> token){
         if(token.size()!= 0){
             switch(token.get(0).type) {
@@ -143,6 +164,7 @@ public class Parse{
       public void EXPRp (ArrayList<Tokenizer.Token> token){
         switch(token.get(0).type){
             case SYOR:
+                
                 EXPRAND(token);
                 EXPRp(token);
                 break;
@@ -311,20 +333,20 @@ public class Parse{
                                                             token.remove(0);
                                                             break;
                                                          default:
-                                                            error.add("Illegal EXPRESION EXP structure: " + token.get(0).toError());
+                                                            error.add("Illegal EXPRESION EXP structure: " + token.get(0).getLine());
                                                             break;
                                                     }
                                             }
                                             break;
                                          default:
-                                            error.add("Illegal EXPRESION EXP structure: " + token.get(0).toError());
+                                            error.add("Illegal EXPRESION EXP structure: " + token.get(0).getLine());
                                             break;
                                     }
                                 }else
                                     error.add("Illegal EXPRESION EXP structure");
                                 break;
                             default:
-                                error.add("Illegal EXPRESION EXP structure: " + token.get(0).toError());
+                                error.add("Illegal EXPRESION EXP structure: " + token.get(0).getLine());
                                 break;
                         }
                       
@@ -342,9 +364,22 @@ public class Parse{
                                     switch(token.get(0).type){
                                         case ID:
                                             token.remove(0);
+                                            if(token.size()>1){
+                                                if(token.get(0).type == SYEQUALS){
+                                                    token.remove(0);
+                                                    EXPR(token);
+                                                }
+                                            }
                                             break;
                                         default:
-                                            error.add("Malformed expression afted the DOT");
+                                            token.remove(0);
+                                            error.add("Malformed expression afted the DOT"+  token.get(0).getLine());
+                                            if(token.size()>1){
+                                                if(token.get(0).type == SYEQUALS){
+                                                    token.remove(0);
+                                                    EXPR(token);
+                                                }
+                                            }
                                             break;
                                     }
                                 }
@@ -358,7 +393,7 @@ public class Parse{
                                             token.remove(0);
                                             break;
                                         default:
-                                            error.add("Malformed expression afted the DOT");
+                                            error.add("Malformed expression afted the DOT"+ token.get(0).getLine());
                                             break;
                                     }
                                 }
@@ -370,7 +405,7 @@ public class Parse{
                     break;
             }
         }else
-            error.add("Illegal EXPRESION EXP structure");
+            error.add("Illegal EXPRESION EXP structure"+token.get(0).getLine());
     }
      public void CONSTANT (ArrayList<Tokenizer.Token> token){
         if(token.size()!= 0){
@@ -397,14 +432,21 @@ public class Parse{
                     break;
                 case ID:
                        token.remove(0);
+                        if(token.size()>1){
+                            if(token.get(0).type == SYEQUALS){
+                                    token.remove(0);
+                                    EXPR(token);
+                                }
+                            }
                        break;
                 default:
                     if(!optionalTructure)                        
                         error.add("Missing expression inside structure " +structure +token.get(0).getLine());
-                    optionalTructure = false;
+                    optionalTructure = true;
+                    //token.remove(0);
                     break;
             }
         }else
-            error.add("Illegal EXPRESION CONSTANT structure");
+            error.add("Illegal EXPRESION CONSTANT structure"+token.get(0).getLine());
     }
 }
