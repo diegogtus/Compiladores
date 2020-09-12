@@ -63,7 +63,7 @@ public class Tokenizer{
         SYLOWERTHAN("<"),
         SYGRATEREQUALSTHAN(">="),
         SYGRATERTHAN(">"),
-        SYDOBLEEQUALS("=="),
+        SYDOUBLEEQUALS("=="),
         SYEQUALS("="),
         SYDIFERENT("!="),
         SYAND("&&"),

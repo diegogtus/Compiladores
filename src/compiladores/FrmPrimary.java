@@ -46,6 +46,8 @@ public class FrmPrimary extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         txta_input = new javax.swing.JTextArea();
         txtPath = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -79,16 +81,14 @@ public class FrmPrimary extends javax.swing.JFrame {
 
         txtPath.setEditable(false);
 
+        jLabel1.setText("INPUT");
+
+        jLabel2.setText("ERRORS");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(213, 213, 213)
-                .addComponent(btnBrowser)
-                .addGap(18, 18, 18)
-                .addComponent(txtPath, javax.swing.GroupLayout.PREFERRED_SIZE, 565, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(90, 90, 90)
                 .addComponent(jScrollPane2)
@@ -97,6 +97,18 @@ public class FrmPrimary extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(168, 168, 168))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(213, 213, 213)
+                .addComponent(btnBrowser)
+                .addGap(18, 18, 18)
+                .addComponent(txtPath, javax.swing.GroupLayout.PREFERRED_SIZE, 565, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(157, 157, 157)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(323, 323, 323))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,7 +119,11 @@ public class FrmPrimary extends javax.swing.JFrame {
                     .addComponent(txtPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -139,8 +155,9 @@ public class FrmPrimary extends javax.swing.JFrame {
        String analizedFile = "";
         txta_output.setText("");
         ArrayList<Tokenizer.Token> tokens = Lexer.lex(txta_input.getText());
+        txta_output.append("***PARSER TOKENIZER ERRORS**\n");
         for (Tokenizer.Token token : tokens){
-             analizedFile = analizedFile + "\n" +token.toString();
+             analizedFile = analizedFile + "\n" +token.toString();         
             if(token.type.name() == "ERROR"  | token.type.name() =="UNCLOSEDSTRING"
                    | token.type.name() == "UNCLOSEDCOMMENT" | token.type.name() == "UNOPENEDCOMMENT" ){
                 txta_output.append(token.toString()+ "\n\n");
@@ -149,6 +166,7 @@ public class FrmPrimary extends javax.swing.JFrame {
         }
         Parse parse = new Parse();
         ArrayList<String> parser = parse.parse(tokens);
+        txta_output.append("\n\n\n***PARSER ERRORS***\n");
         analizedFile = analizedFile + "\n\n\n" + "***PARSER ERRORS***";
         for (String parserErrors : parser){
             analizedFile = analizedFile + "\n" + parserErrors;
@@ -244,6 +262,8 @@ private void write(String analizedFile) {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField txtPath;

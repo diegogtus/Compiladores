@@ -156,8 +156,8 @@ public class Lexer {
  } else if (matcher.group(TokenType.SYEQUALS.name()) != null) {
         tokens.add(new Token(TokenType.SYEQUALS, matcher.group(TokenType.SYEQUALS.name()), line, start,endChar));
         continue;
- } else if (matcher.group(TokenType.SYDOBLEEQUALS.name()) != null) {
-        tokens.add(new Token(TokenType.SYDOBLEEQUALS, matcher.group(TokenType.SYDOBLEEQUALS.name()), line, start,endChar));
+ } else if (matcher.group(TokenType.SYDOUBLEEQUALS.name()) != null) {
+        tokens.add(new Token(TokenType.SYDOUBLEEQUALS, matcher.group(TokenType.SYDOUBLEEQUALS.name()), line, start,endChar));
         continue;
  } else if (matcher.group(TokenType.SYDIFERENT.name()) != null) {
         tokens.add(new Token(TokenType.SYDIFERENT, matcher.group(TokenType.SYDIFERENT.name()), line, start,endChar));
