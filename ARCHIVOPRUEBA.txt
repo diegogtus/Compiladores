@@ -4,6 +4,20 @@ while ( 12  ) #
 			while ( true ) 
 				for ( 2 : 2 : 2)
 					while ( null );
-
+while ( (12)  )# 
+		while (true) %
+			while (false) #
+				while (true == false)
+					while (true != false)
+						while( -1)
+while( 12.5)
+	while( )
+	while(true
+	for(true: false: false)
+	for(:true:)
+	while(false.HOLA)
+	while(this.HOLA)
+		for(::)
+		while(!true[false]);
 
 

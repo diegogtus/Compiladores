@@ -294,9 +294,7 @@ public class Parse{
                     }else
                         error.add("Illegal EXPRESION EXP structure");
                     break;
-                case THIS:
-                    token.remove(0);
-                    break;
+                
                 case NEW:
                     token.remove(0);
                     if(token.size()!= 0){
@@ -336,6 +334,39 @@ public class Parse{
                 default:
                    
                    CONSTANT(token);
+                    if(token.size()!= 0){
+                        switch(token.get(0).type){
+                            case SYDOT:
+                                token.remove(0);
+                                if(token.size()!= 0){
+                                    switch(token.get(0).type){
+                                        case ID:
+                                            token.remove(0);
+                                            break;
+                                        default:
+                                            error.add("Malformed expression afted the DOT");
+                                            break;
+                                    }
+                                }
+                                break;
+                            case SYBRAKETOPEN:
+                                token.remove(0);
+                                     if(token.size()!= 0){
+                                         EXPR(token);
+                                    switch(token.get(0).type){
+                                        case SYBRAKETCLOSE:
+                                            token.remove(0);
+                                            break;
+                                        default:
+                                            error.add("Malformed expression afted the DOT");
+                                            break;
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                     break;
             }
         }else
@@ -348,6 +379,9 @@ public class Parse{
                     token.remove(0);
                     break;
                 case DOUBLE:
+                    token.remove(0);
+                    break;
+                case THIS:
                     token.remove(0);
                     break;
                 case HEXA:
