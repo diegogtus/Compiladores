@@ -16,9 +16,31 @@ public class Tokenizer{
         SINGLE("//.*"),
         NEWLINE("[\n]|[\\s]+\n"),
         WHITESPACE("[\\s]+"),
-        RESERVED("void|int|double|bool|string|class|const|interface"
+        
+        /*RESERVED("void|int|double|bool|string|class|const|interface"
                 + "|null|this|for|while|foreach|if|else|return|break|New|NewArray"
-                + "|Console|WriteLine"),
+                + "|Console|WriteLine"),*/
+        VOID("void"),
+        INTERFACE("interface"),
+        INT("int"),
+        DOUBLERESERVED("double"),
+        BOOL("bool"),
+        STRINGRESERVED("string"),
+        CLASS("class"),
+        CONST("const"),
+        NULL("null"),
+        THIS("this"),
+        FOREACH("foreach"),
+        FOR("for"),
+        WHILE("while"),
+        IF("if"),
+        ELSE("else"),
+        RETURN("return"),
+        BREAK("break"),
+        NEWARRAY("NewArray"),
+        NEW("New"),
+        CONSOLE("Console"),
+        WRITELINE("WriteLine"),
         //UNCLOSEDSTRING("\"[^\r\n]+"),
         BOOLEAN("true|false"),
         ID("[a-zA-Z][\\w]*"),

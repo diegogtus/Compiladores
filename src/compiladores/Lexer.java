@@ -34,9 +34,69 @@ public class Lexer {
         start = matcher.start();
         endChar = matcher.end();
         
-       if(matcher.group(TokenType.RESERVED.name()) != null){
-          tokens.add(new Token(TokenType.RESERVED, matcher.group(TokenType.RESERVED.name()), line,start,endChar));
+       if(matcher.group(TokenType.VOID.name()) != null){
+          tokens.add(new Token(TokenType.VOID, matcher.group(TokenType.VOID.name()), line,start,endChar));
         continue; 
+        		}else if(matcher.group(TokenType.INT.name()) != null){
+          tokens.add(new Token(TokenType.INT, matcher.group(TokenType.INT.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.DOUBLERESERVED.name()) != null){
+          tokens.add(new Token(TokenType.DOUBLERESERVED, matcher.group(TokenType.DOUBLERESERVED.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.BOOL.name()) != null){
+          tokens.add(new Token(TokenType.BOOL, matcher.group(TokenType.BOOL.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.STRINGRESERVED.name()) != null){
+          tokens.add(new Token(TokenType.STRINGRESERVED, matcher.group(TokenType.STRINGRESERVED.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.CLASS.name()) != null){
+          tokens.add(new Token(TokenType.CLASS, matcher.group(TokenType.CLASS.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.CONST.name()) != null){
+          tokens.add(new Token(TokenType.CONST, matcher.group(TokenType.CONST.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.INTERFACE.name()) != null){
+          tokens.add(new Token(TokenType.INTERFACE, matcher.group(TokenType.INTERFACE.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.NULL.name()) != null){
+          tokens.add(new Token(TokenType.NULL, matcher.group(TokenType.NULL.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.THIS.name()) != null){
+          tokens.add(new Token(TokenType.THIS, matcher.group(TokenType.THIS.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.FOR.name()) != null){
+          tokens.add(new Token(TokenType.FOR, matcher.group(TokenType.FOR.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.WHILE.name()) != null){
+          tokens.add(new Token(TokenType.WHILE, matcher.group(TokenType.WHILE.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.FOREACH.name()) != null){
+          tokens.add(new Token(TokenType.FOREACH, matcher.group(TokenType.FOREACH.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.IF.name()) != null){
+          tokens.add(new Token(TokenType.IF, matcher.group(TokenType.IF.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.ELSE.name()) != null){
+          tokens.add(new Token(TokenType.ELSE, matcher.group(TokenType.ELSE.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.RETURN.name()) != null){
+          tokens.add(new Token(TokenType.RETURN, matcher.group(TokenType.RETURN.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.BREAK.name()) != null){
+          tokens.add(new Token(TokenType.BREAK, matcher.group(TokenType.BREAK.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.NEW.name()) != null){
+          tokens.add(new Token(TokenType.NEW, matcher.group(TokenType.NEW.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.NEWARRAY.name()) != null){
+          tokens.add(new Token(TokenType.NEWARRAY, matcher.group(TokenType.NEWARRAY.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.CONSOLE.name()) != null){
+          tokens.add(new Token(TokenType.CONSOLE, matcher.group(TokenType.CONSOLE.name()), line,start,endChar));
+        continue;
+		}else if(matcher.group(TokenType.WRITELINE.name()) != null){
+          tokens.add(new Token(TokenType.WRITELINE, matcher.group(TokenType.WRITELINE.name()), line,start,endChar));
+        continue;
       }else if(matcher.group(TokenType.BOOLEAN.name()) != null){
           tokens.add(new Token(TokenType.BOOLEAN, matcher.group(TokenType.BOOLEAN.name()), line,start,endChar));
         continue;
