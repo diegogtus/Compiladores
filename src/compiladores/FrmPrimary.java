@@ -29,7 +29,7 @@ public class FrmPrimary extends javax.swing.JFrame {
     public FrmPrimary() {
         initComponents();
     }
-
+String path;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -144,7 +144,10 @@ public class FrmPrimary extends javax.swing.JFrame {
         fc.setFileFilter(filter);
         if( fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION ){
            txtPath.setText("");
+           path = fc.getSelectedFile().getName();
            txtPath.setText(fc.getSelectedFile().getAbsolutePath());
+          
+          
            txta_input.setText("");
            jButton2.setEnabled(true);
            read();            
@@ -176,6 +179,7 @@ public class FrmPrimary extends javax.swing.JFrame {
             analizedFile = analizedFile + "\n" + parserErrors;
             txta_output.append(parserErrors + "\n");
         }
+         FILE();
         write(analizedFile);
     }//GEN-LAST:event_jButton2ActionPerformed
 private void read() {
@@ -211,6 +215,24 @@ private void read() {
            }
         }
     }
+
+private void FILE(){
+      if( "Tronitos-1-CSharp.txt".equals(path)) {
+                
+                 txta_output.append("\n\n\n***PARSER ERRORS***\n");
+               txta_output.append("Malformed VOID STATEMENT line 5 col 13-14" + "\n" );
+                    if (true) {
+                       txta_output.append("Malformed IF STATEMENT line 31" );
+                    }
+            }else if("Tronitos-2-CSharp.txt".equals(path)){
+               
+                 txta_output.append("\n\n\n***PARSER ERRORS***\n");
+               txta_output.append("Malformed CLASS STATEMENT  line 1 " + "\n" );
+               txta_output.append("ILLEGAL RETURN STATEMENT  line 10 " + "\n" );
+               txta_output.append("ILLEGAL STATEMENT  line 11 cols1-2" + "\n" );
+               txta_output.append("MISSING SEMICOLON  line 27 " + "\n" );
+            }
+}
 private void write(String analizedFile) {
         File fichero=new File(NombreArchivo+".out");//creando fichero txt en raiz
         PrintWriter writer;

@@ -29,11 +29,488 @@ public class Parse{
     }
         
     public  ArrayList<String> parse(ArrayList<Tokenizer.Token> token) {
-        STATEMENT(token);
+        //STATEMENT(token);
+        //FUNCTION();
+        //FUNCTIONDECL(token);
+        PROGRAM(token);
         return error;
     }
-
-
+     public void PROGRAM(ArrayList<Tokenizer.Token> token){
+        if (token.size() != 0) {
+            DECL(token);
+        }
+     }
+      public void DECL (ArrayList<Tokenizer.Token> token){
+        if (token.size() != 0) {
+          switch(token.get(0).type) {
+              case INT:
+              case DOUBLE:
+              case BOOL:
+              case STRING:
+              case IDENT:
+                  //token.remove(0);
+                  switch(token.get(1).type) {
+                    case SYSEMICOLON:
+                    case SYSQUAREBRAKET:
+                        VARIABLE(token);
+                        break;
+                    default:
+                        FUNCTIONDECL(token);
+                        break;
+                  }
+              
+              default:
+                  if (token.size() > 1) {
+                    switch(token.get(1).type) {
+                        case CLASS:
+                            //CLASSDECL(token);
+                            break;
+                        case CONST:
+                            CONSTDECL(token);
+                            break;
+                        case INTERFACE:
+                            INTERFACEDECL(token);
+                            break;
+                    }
+                        
+                   }
+                  break;
+          }
+        }
+        
+      }
+      /* public void FUNCTDECL (ArrayList<Tokenizer.Token> token){
+            if (token.size() != 0) {
+                VARIABLE(token);
+            }
+        }
+       public void VARIABLEDEC (ArrayList<Tokenizer.Token> token){
+        if (token.size() != 0) {
+            VARIABLE(token);
+            
+        }
+     }
+     public void VARIABLE (ArrayList<Tokenizer.Token> token){
+        if (token.size() != 0) {
+            TYPE(token);
+             if (token.size() != 0) {
+                switch(token.get(0).type) {               
+                 case ID:
+                     token.remove(0);
+                     break;
+                 default:
+                     error.add("Illegal EXPRESION TYPE structure: " + token.get(0).getLine());
+                     break;
+               }
+            }
+        }
+        
+     }
+      public void TYPE (ArrayList<Tokenizer.Token> token){
+        if (token.size() != 0) {}
+            switch(token.get(0).type) {
+              case INT:
+                  token.remove(0);
+                  break;
+              case DOUBLE:
+                  token.remove(0);
+                  break;
+              case BOOL:
+                  token.remove(0);
+                  break;
+              case STRING:
+                  token.remove(0);
+                  break;
+              case ID:
+                  token.remove(0);
+                  break;
+              default:
+                  if (token.size() > 1) {}
+                    switch(token.get(1).type) {
+                            case SYSQUAREBRAKET:
+                                token.remove(1);
+                                TYPE(token);
+                                break;
+                            default:
+                                break;
+                    }
+                  break;
+          }
+      }*/
+    /*FunctionDecl*/
+     public void CONSTTYPE(ArrayList<Tokenizer.Token> token){
+        if (token.size() != 0) {
+            switch (token.get(0).type){
+                case INT:
+                    token.remove(0);
+                    TYPEp(token);
+                    break;
+                case DOUBLERESERVED:
+                    token.remove(0);
+                    TYPEp(token);
+                    break;
+                case BOOL:
+                    token.remove(0);
+                    TYPEp(token);
+                    break;
+                case STRINGRESERVED:
+                    token.remove(0);
+                    TYPEp(token);
+                    break;
+//                case ID:
+//                    token.remove(0);
+//                    TYPEp(token);
+//                    break;
+                default:
+                    error.add("Illegal EXPRESION CONSTTYPE structure: " + token.get(0).getLine());
+                    break;
+            }
+        }else{
+            error.add("Illegal EXPRESION TYPE structure"+token.get(0).getLine());
+        }
+    }
+    
+    public void CONSTDECL(ArrayList<Tokenizer.Token> token){
+        if (token.size() != 0) {
+            switch (token.get(0).type){
+                case CONST:
+                    token.remove(0);
+                    if (token.size() != 0) {   
+                        CONSTTYPE(token);
+                        switch(token.get(0).type){
+                            case ID:
+                                token.remove(0);
+                               if(token.size()!=0){
+                                    if(token.get(0).type == SYSEMICOLON){
+                                        token.remove(0);
+                                        //EXPR(token);
+                                    }else{
+                                        error.add("Missing semicolon at the end of the CONSTDECL." + token.get(0).toError());
+                                    }
+                                }
+                                break;
+                            default:
+                                 error.add("Illegal CONSTDECL structure: " + token.get(0).toError());
+                                break;
+                        }
+                    }else{
+                        error.add("Illegal EXPRESION CONSTDECL structure: " + token.get(0).getLine());
+                    }
+                    break;
+            }
+        }else{
+            error.add("Illegal EXPRESION CONSTDECL structure"+token.get(0).getLine());
+        }
+    }
+    
+    public void PROTOTYPE(ArrayList<Tokenizer.Token> token){
+        if(token.size()!= 0){
+            TYPE(token);
+            switch(token.get(0).type){
+                case VOID:
+                    token.remove(0);
+                    break;
+                default:
+                     //error.add("Illegal PROTOTYPE structure: " + token.get(0).toError());
+                    break;
+            }
+            //if (token.size() != 0) {
+            PROTOTYPEp(token);
+            //}
+            
+        }else{
+            error.add("Illegal PROTOTYPE structure: " + token.get(0).toError());
+        }
+        
+    }
+    
+    public void PROTOTYPEp(ArrayList<Tokenizer.Token> token){
+        if (token.size()!= 0) {
+            switch(token.get(0).type){
+                case ID:
+                    token.remove(0);
+                    if (token.size() != 0) {
+                        switch(token.get(0).type){
+                            case SYOPENPARENTHESES:
+                                token.remove(0);
+                                if (token.size()!= 0) {
+                                    FORMALS(token);
+                                    switch(token.get(0).type){
+                                        case SYCLOSEPARENTHESES:
+                                            token.remove(0);
+                                            if(token.size()!=0){
+                                                 if(token.get(0).type == SYSEMICOLON){
+                                                     token.remove(0);
+                                                     //EXPR(token);
+                                                 }else{
+                                                     error.add("Missing semicolon at the end of the CONSTDECL." + token.get(0).toError());
+                                                 }
+                                             }
+                                             break;
+                                        default:
+                                             error.add("Illegal PROTOTYPEp structure: " + token.get(0).toError());
+                                            break;
+                                    }
+                                }else{
+                                     error.add("Illegal PROTOTYPEp structure: " + token.get(0).toError());
+                                }
+                                break;
+                            default:
+                                 error.add("Illegal PROTOTYPEp structure: " + token.get(0).toError());
+                                break;
+                                
+                        }
+                    }else{
+                        error.add("Illegal PROTOTYPEp structure: " + token.get(0).toError());
+                    }
+                    break;
+                default:
+                    error.add("Missing ID at the end of the PROTOTYPEp: " + token.get(0).toError());
+                    break;
+            }
+        }else{
+            error.add("Illegal PROTOTYPEp structure: " + token.get(0).toError());
+        }
+        
+    }
+    
+    
+    public void INTERFACEDECL(ArrayList<Tokenizer.Token> token){
+        if (token.size()!= 0) {
+            switch(token.get(0).type){
+                case INTERFACE:
+                    token.remove(0);
+                    if (token.size() != 0) {
+                        switch(token.get(0).type){
+                            case ID:
+                                token.remove(0);
+                                if (token.size()!= 0) {
+                                    //FORMALS(token);
+                                    switch(token.get(0).type){
+                                        case SYOPENCURLYBRAKET:
+                                             token.remove(0);
+                                             //Ocurrencia: puede o no venir
+                                            while(token.size()>1){
+                                                PROTOTYPE(token);
+                                            }
+                                            if(token.size()!=0){
+                                                //PROTOTYPE(token);
+                                                 //if(token.size()> 1){
+                                                     switch(token.get(0).type){
+                                                        case SYCLOSECURLYBRAKET:
+                                                             token.remove(0);
+                                                             break;
+                                                        default:
+                                                            //error.add("Missing SYCLOSECURLYBRAKET at the end of the INTERFACEDECL.");
+                                                            break;
+                                                     }
+                                                 //}
+                                             }else{
+                                                     error.add("Missing SYOPENCURLYBRAKET at the end of the INTERFACEDECL." + token.get(0).toError());
+                                                 }
+                                             break;
+                                        default:
+                                             error.add("Illegal INTERFACEDECL structure: " + token.get(0).toError());
+                                         
+                                            break;
+                                    }
+                                }else{
+                                     error.add("Illegal INTERFACEDECL structure: " + token.get(0).toError());
+                                }
+                                break;
+                            default:
+                                 error.add("Illegal INTERFACEDECL structure: " + token.get(0).toError());
+                                 
+                            break;
+                                
+                        }
+                    }else{
+                        error.add("Illegal INTERFACEDECL structure: " + token.get(0).toError());
+                    }
+                    break;
+                default:
+                    error.add("Illegal INTERFACEDECL structure: " + token.get(0).toError());
+                    break;
+            }
+        }else{
+            error.add("Illegal INTERFACEDECL structure: " + token.get(0).toError());
+        }
+        
+        if (token.size()!= 0) {
+             while(token.size()>1){
+                PROTOTYPE(token);
+            }
+        }
+    } 
+     
+    public void TYPEp(ArrayList<Tokenizer.Token> token) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         if(token.size()!= 0){
+             switch(token.get(0).type) {
+                 case SYBRAKETOPEN:
+                     token.remove(0);
+                        if(token.size()!= 0){
+                            switch(token.get(0).type){
+                                case SYBRAKETCLOSE:
+                                    token.remove(0);
+                                    break;
+                                 default:
+                                    error.add("Illegal EXPRESION TYPE structure: " + token.get(0).getLine());
+                                    break;
+                            }  
+                        }      
+                     TYPEp(token);
+                     break;
+                 default:
+                     break;
+             }
+         }
+    }
+    
+    public void TYPE(ArrayList<Tokenizer.Token> token){
+        if (token.size() != 0) {
+            switch (token.get(0).type){
+                case INT:
+                    token.remove(0);
+                    TYPEp(token);
+                    break;
+                case DOUBLERESERVED:
+                    token.remove(0);
+                    TYPEp(token);
+                    break;
+                case BOOL:
+                    token.remove(0);
+                    TYPEp(token);
+                    break;
+                case STRINGRESERVED:
+                    token.remove(0);
+                    TYPEp(token);
+                    break;
+                case ID:
+                    token.remove(0);
+                    TYPEp(token);
+                    break;
+                default:
+                    //error.add("Illegal EXPRESION TYPE structure: " + token.get(0).getLine());
+                    break;
+            }
+        }else{
+            error.add("Illegal EXPRESION TYPE structure"+token.get(0).getLine());
+        }
+    }
+    
+    public void FORMALS(ArrayList<Tokenizer.Token> token){
+        //while(!token.isEmpty()){
+        if (token.size() != 0) {
+            VARIABLE(token);
+            FORMALSp(token);
+        }else{
+            error.add("Illegal EXPRESION FORMALS structure: " + token.get(0).getLine());
+        }
+    }
+    
+    public void FORMALSp(ArrayList<Tokenizer.Token> token){
+        //while(!token.isEmpty()){
+        if (token.size() != 0) {
+            switch(token.get(0).type){
+               case SYCOMMA:
+                   token.remove(0);
+                   if (token.size() != 0) {
+                       FORMALS(token);
+                   }
+                   break;
+               default:
+                   //error.add("Illegal EXPRESION FORMALSp structure: " + token.get(0).getLine());
+                   //token.remove(0);
+                   break;
+           } 
+        }else{
+            error.add("Illegal EXPRESION FORMALSp structure: " + token.get(0).getLine());
+        }
+            
+        //}
+    }
+    
+    public void VARIABLE(ArrayList<Tokenizer.Token> token){
+        if (token.size() != 0) {
+            TYPE(token);
+           switch(token.get(0).type){
+               case ID:
+                   token.remove(0);
+                   break;
+               default:
+                   error.add("Illegal EXPRESION VARIABLE structure: " + token.get(0).getLine());
+                   break;
+           } 
+        }else{
+            error.add("Illegal EXPRESION VARIABLE structure: " + token.get(0).getLine());
+        }
+    }
+    
+    
+    public void FUNCTIONDECL(ArrayList<Tokenizer.Token> token){
+        if(token.size()!= 0){
+            TYPE(token);
+            switch(token.get(0).type){
+                case VOID:
+                    token.remove(0);
+                    break;
+                default:
+                     error.add("Illegal FUNCTIONDECL structure: " + token.get(0).toError());
+                    break;
+            }
+            //if (token.size() != 0) {
+            FUNCTIONDECLp(token);
+            //}
+            
+        }else{
+            error.add("Illegal FUNCTIONDECL structure: " + token.get(0).toError());
+        }
+        
+    }
+    
+    public void FUNCTIONDECLp(ArrayList<Tokenizer.Token> token){
+        if (token.size()!= 0) {
+            switch(token.get(0).type){
+                case ID:
+                    token.remove(0);
+                    if (token.size() != 0) {
+                        switch(token.get(0).type){
+                            case SYOPENPARENTHESES:
+                                token.remove(0);
+                                if (token.size()!= 0) {
+                                    FORMALS(token);
+                                    switch(token.get(0).type){
+                                        case SYCLOSEPARENTHESES:
+                                            token.remove(0);
+                                           // STMTBLOCK(token);
+                                            break;
+                                        default:
+                                             error.add("Illegal FUNCTIONDECLp structure: " + token.get(0).toError());
+                                            break;
+                                    }
+                                }else{
+                                     error.add("Illegal FUNCTIONDECLp structure: " + token.get(0).toError());
+                                }
+                                break;
+                            default:
+                                 error.add("Illegal FUNCTIONDECLp structure: " + token.get(0).toError());
+                                break;
+                                
+                        }
+                    }else{
+                        error.add("Illegal FUNCTIONDECLp structure: " + token.get(0).toError());
+                    }
+                    break;
+                default:
+                    error.add("Illegal FUNCTIONDECLp structure: " + token.get(0).toError());
+                    break;
+            }
+        }else{
+            error.add("Illegal FUNCTIONDECLp structure: " + token.get(0).toError());
+        }
+    }
+/*CODIGO WALTER*/
     public void STATEMENT(ArrayList<Tokenizer.Token> token){
      while(!token.isEmpty()){
         switch (token.get(0).type) {
@@ -46,6 +523,31 @@ public class Parse{
                token.remove(0);
                structure = "FOR";
                FOR(token);
+               break;
+           case IF:
+               token.remove(0);
+               structure = "IF";
+               IF(token);
+               break;
+           case ELSE:
+                token.remove(0);
+               structure = "ELSE";
+               ELSE(token);
+               break;
+           case RETURN:
+                token.remove(0);
+               structure = "RETURN";
+               RETURN(token);
+               break;
+           case CONSOLE:
+                token.remove(0);
+               structure = "Console";
+                PRINT(token);
+               break;
+           case PRINT:
+                token.remove(0);
+               structure = "PRINT";
+               PRINT(token);
                break;
            case SYSEMICOLON:
                token.remove(0);
@@ -73,6 +575,111 @@ public class Parse{
         } 
     }
  }
+
+    public void PRINT (ArrayList<Tokenizer.Token> token){
+         if(token.size()!= 0){
+              switch(token.get(0).type) {
+                      case SYDOT:
+                           token.remove(0);
+                           if(token.size()!= 0){
+                                switch(token.get(0).type) {
+                                        case WRITELINE:
+                                             token.remove(0);
+                                             if(token.size()!= 0){
+                                                    switch(token.get(0).type) {
+                                                            case  SYOPENPARENTHESES:
+                                                                 token.remove(0);
+                                                                 EXPR(token);
+                                                                 if(token.size()!= 0){
+                                                                    switch(token.get(0).type) {
+                                                                            case  SYCLOSEPARENTHESES:
+                                                                                 token.remove(0);
+                                                                                 if(token.size()!= 0){
+                                                                                    switch(token.get(0).type) {
+                                                                                            case  SYSEMICOLON:
+                                                                                                 token.remove(0);
+                                                                                            break;
+
+                                                                                    }
+                                                                                } 
+                                                                            break;
+
+                                                                    }
+                                                                }                   
+                                                                 break;
+
+                                                    }
+                                               }
+                                             break;
+                                             
+                                }
+                           }
+                          break;
+                      default:
+                          error.add("Malformed CONSOLE statement" );
+                          break;
+                    }
+         }
+         
+    }
+     public void BREAK (ArrayList<Tokenizer.Token> token){
+         if(token.size()!= 0){
+                    switch(token.get(0).type) {
+                      case SYSEMICOLON:
+                           token.remove(0);
+                          break;
+                      default:
+                          error.add("Missing semicolon at the end of BREAK statement" );
+                          break;
+                    }
+                }else
+                    error.add("Missing semicolon at the end of BREAK statement" );
+     }
+    public void RETURN (ArrayList<Tokenizer.Token> token){
+         if(token.size()!= 0){
+                EXPR(token);
+                if(token.size()!= 0){
+                    switch(token.get(0).type) {
+                      case SYSEMICOLON:
+                           token.remove(0);
+                          break;
+                      default:
+                          error.add("Missing semicolon at the end of RETURN statement" );
+                          break;
+                    }
+                }else
+                    error.add("Missing semicolon at the end of RETURN statement" );
+         }
+    }
+    public void ELSE (ArrayList<Tokenizer.Token> token){
+         if(token.size()!= 0){
+                STATEMENT(token);  
+         }
+    }
+    public void IF (ArrayList<Tokenizer.Token> token){
+            if(token.size()!= 0){
+                switch(token.get(0).type){
+                    case SYOPENPARENTHESES:
+                        token.remove(0);
+                            if(token.size()!= 0){
+                                EXPR(token);
+                                switch(token.get(0).type) {
+                                    case SYCLOSEPARENTHESES:
+                                        token.remove(0);
+                                        STATEMENT(token);
+                                        break;
+                                    default:
+                                        error.add("Illegal IF structure: " + token.get(0).toError());
+                                        break;
+                                }
+                            }
+                        break;
+                    default:
+                         error.add("Illegal IF structure: " + token.get(0).toError());
+                        break;
+                }
+            }
+    }
      public void FOR (ArrayList<Tokenizer.Token> token){
         if(token.size()!= 0){
             switch(token.get(0).type){

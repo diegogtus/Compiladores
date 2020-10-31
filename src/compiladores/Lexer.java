@@ -58,6 +58,9 @@ public class Lexer {
 	}else if(matcher.group(TokenType.CONST.name()) != null){
           tokens.add(new Token(TokenType.CONST, matcher.group(TokenType.CONST.name()), line,start,endChar));
         continue;
+        }else if(matcher.group(TokenType.IDENT.name()) != null){
+          tokens.add(new Token(TokenType.IDENT, matcher.group(TokenType.IDENT.name()), line,start,endChar));
+        continue;
 	}else if(matcher.group(TokenType.INTERFACE.name()) != null){
           tokens.add(new Token(TokenType.INTERFACE, matcher.group(TokenType.INTERFACE.name()), line,start,endChar));
         continue;
