@@ -115,6 +115,12 @@ public class Tokenizer{
     public String getLine(){
         return String.format(" %-14sline %s cols %s-%-5s", "",line,charStart, charEnd);
     }
+    public String getLineForError(){
+        return String.format(" %-14sline %s cols %s-%-5s", "",line+1,charStart, charEnd);
+    }
+    public String getLineSimicolon(){
+        return String.format(" %-14sline %s cols %s-%-5s", "",line-1,charStart, charEnd);
+    }
     @Override
     public String toString() {
         if(null ==type.name())

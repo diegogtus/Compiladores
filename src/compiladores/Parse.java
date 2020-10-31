@@ -22,7 +22,8 @@ public class Parse{
         ArrayList<String> error; 
         Tokenizer.Token Token;
         String structure;
-        boolean optionalTructure = true;
+         Tokenizer.Token LastToken;
+       // boolean optionalTructure = true;
     public Parse() {
         error = new ArrayList<String>();
     }
@@ -56,11 +57,19 @@ public class Parse{
                     break;
                }
                EXPR(token);
-               if(token.get(0).type == SYSEMICOLON)
-                   token.remove(0);
-               else
-                   error.add("Missing semicolon" +  token.get(0).getLine());
-               break;
+                if(token.size()!= 0){
+                    if(token.get(0).type == SYSEMICOLON)
+                        token.remove(0);
+                    else
+                        error.add("Missing semicolon" +  token.get(0).getLineSimicolon());
+                    if(token.size()!= 0){
+                        if(LastToken == token.get(0))
+                            token.remove(0);
+                        if(token.size()!= 0)
+                            LastToken = token.get(0);
+                    }
+                    break;
+                }error.add("Missing semicolon at the end of the file" );
         } 
     }
  }
@@ -70,19 +79,19 @@ public class Parse{
                 case SYOPENPARENTHESES:
                         token.remove(0);
                             if(token.size()!= 0){
-                                optionalTructure = true;
+                               // optionalTructure = true;
                                 EXPR(token);
                                 switch(token.get(0).type) {
                                     case SYSEMICOLON:
                                         token.remove(0);
                                         if(token.size()!= 0){
-                                            optionalTructure = false;
+                                          //  optionalTructure = false;
                                             EXPR(token);
                                             switch(token.get(0).type) {
                                                 case SYSEMICOLON:
                                                     token.remove(0);
                                                     if(token.size()!= 0){
-                                                        optionalTructure = true;
+                                                      //  optionalTructure = true;
                                                         EXPR(token);
                                                         switch(token.get(0).type) {
                                                         case SYCLOSEPARENTHESES:
@@ -162,14 +171,16 @@ public class Parse{
         EXPRp(token);
     }
       public void EXPRp (ArrayList<Tokenizer.Token> token){
-        switch(token.get(0).type){
-            case SYOR:
-                
-                EXPRAND(token);
-                EXPRp(token);
-                break;
-            default:
-                break;
+         if(token.size()!= 0){
+            switch(token.get(0).type){
+              case SYOR:
+
+                  EXPRAND(token);
+                  EXPRp(token);
+                  break;
+              default:
+                  break;
+          }
         }
     }
     public void EXPRAND (ArrayList<Tokenizer.Token> token){
@@ -177,64 +188,70 @@ public class Parse{
         EXPRANDp(token);
     }
     public void EXPRANDp (ArrayList<Tokenizer.Token> token){
-        switch(token.get(0).type){
-            case SYAND:
-                token.remove(0);
-                EXPREQUALS(token);
-                EXPRANDp(token);
-                break;
-            default:
-                break;
-        }
+         if(token.size()!= 0){   
+            switch(token.get(0).type){
+                case SYAND:
+                    token.remove(0);
+                    EXPREQUALS(token);
+                    EXPRANDp(token);
+                    break;
+                default:
+                    break;
+            }
+         }
     }
     public void EXPREQUALS (ArrayList<Tokenizer.Token> token){
           EXPRREL(token);
           EXPREQUALSp(token);
     }
     public void EXPREQUALSp (ArrayList<Tokenizer.Token> token){
-        switch(token.get(0).type){
-            case SYDOUBLEEQUALS:
-                token.remove(0);
-                EXPRREL(token);
-                EXPREQUALSp(token);
-                break;
-            case SYDIFERENT:
-                token.remove(0);
-                EXPRREL(token);
-                EXPREQUALSp(token);
-                break;
-            default:
-                break;
-        }
+         if(token.size()!= 0){
+            switch(token.get(0).type){
+                case SYDOUBLEEQUALS:
+                    token.remove(0);
+                    EXPRREL(token);
+                    EXPREQUALSp(token);
+                    break;
+                case SYDIFERENT:
+                    token.remove(0);
+                    EXPRREL(token);
+                    EXPREQUALSp(token);
+                    break;
+                default:
+                    break;
+            }
+         }
     }
     public void EXPRREL (ArrayList<Tokenizer.Token> token){
           EXPRADD(token);
           EXPRRELp(token);
     }
     public void EXPRRELp (ArrayList<Tokenizer.Token> token){
-        switch(token.get(0).type){
-            case SYGRATEREQUALSTHAN:
-                token.remove(0);
-                EXPRADD(token);
-                EXPRRELp(token);
-                break;
-            case SYEQUALSLOWERTHAN:
-                token.remove(0);
-                EXPRADD(token);
-                EXPRRELp(token);
-                break;
-            case SYLOWERTHAN:
-                token.remove(0);
-                EXPRADD(token);
-                EXPRRELp(token);
-                break;
-            case SYGRATERTHAN:
-                token.remove(0);
-                EXPRADD(token);
-                EXPRRELp(token);
-                break;
-            default:
-                break;
+        if(token.size()!= 0){
+            switch(token.get(0).type){
+                case SYGRATEREQUALSTHAN:
+                    token.remove(0);
+                    EXPRADD(token);
+                    EXPRRELp(token);
+                    break;
+                case SYEQUALSLOWERTHAN:
+                    token.remove(0);
+                    EXPRADD(token);
+                    EXPRRELp(token);
+                    break;
+                case SYLOWERTHAN:
+                    token.remove(0);
+                    EXPRADD(token);
+                    EXPRRELp(token);
+                    break;
+                case SYGRATERTHAN:
+                    token.remove(0);
+                    EXPRADD(token);
+                    EXPRRELp(token);
+                    break;
+                default:
+                    break;
+            }
         }
     }
     
@@ -243,19 +260,21 @@ public class Parse{
           EXPRADDp(token);
     }
     public void EXPRADDp (ArrayList<Tokenizer.Token> token){
-        switch(token.get(0).type){
-            case SYMADD:
-                token.remove(0);
-                EXPRMUL(token);
-                EXPRADDp(token);
-                break;
-            case SYMSUB:
-                token.remove(0);
-                EXPRMUL(token);
-                EXPRADDp(token);
-                break;
-            default:
-                break;
+        if(token.size()!= 0){
+            switch(token.get(0).type){
+                case SYMADD:
+                    token.remove(0);
+                    EXPRMUL(token);
+                    EXPRADDp(token);
+                    break;
+                case SYMSUB:
+                    token.remove(0);
+                    EXPRMUL(token);
+                    EXPRADDp(token);
+                    break;
+                default:
+                    break;
+            }
         }
     }
     public void EXPRMUL (ArrayList<Tokenizer.Token> token){
@@ -263,40 +282,44 @@ public class Parse{
           EXPRMULp(token);
     }
     public void EXPRMULp (ArrayList<Tokenizer.Token> token){
-        switch(token.get(0).type){
-            case SYASTERISK:
-                token.remove(0);
-                EXPRUN(token);
-                EXPRMULp(token);
-                break;
-            case SYSLASH:
-                token.remove(0);
-                EXPRUN(token);
-                EXPRMULp(token);
-                break;
-             case SYPERCENTAGE:
-                token.remove(0);
-                EXPRUN(token);
-                EXPRMULp(token);
-                break;
-            default:
-                break;
+        if(token.size()!= 0){
+            switch(token.get(0).type){
+                case SYASTERISK:
+                    token.remove(0);
+                    EXPRUN(token);
+                    EXPRMULp(token);
+                    break;
+                case SYSLASH:
+                    token.remove(0);
+                    EXPRUN(token);
+                    EXPRMULp(token);
+                    break;
+                 case SYPERCENTAGE:
+                    token.remove(0);
+                    EXPRUN(token);
+                    EXPRMULp(token);
+                    break;
+                default:
+                    break;
+            }
         }
     }
     public void EXPRUN (ArrayList<Tokenizer.Token> token){
-         switch(token.get(0).type){
-             case SYMSUB:
-                token.remove(0);
-                EXPREXP(token);
-                break;
-            case SYADMIRATION:
-                token.remove(0);
-                EXPREXP(token);
-                break;
-            default:
-                EXPREXP(token);
-                break;
-        } 
+        if(token.size()!= 0){
+            switch(token.get(0).type){
+                case SYMSUB:
+                   token.remove(0);
+                   EXPREXP(token);
+                   break;
+               case SYADMIRATION:
+                   token.remove(0);
+                   EXPREXP(token);
+                   break;
+               default:
+                   EXPREXP(token);
+                   break;
+           } 
+        }
     }
      public void EXPREXP(ArrayList<Tokenizer.Token> token){
         if(token.size()!= 0){
@@ -440,9 +463,9 @@ public class Parse{
                             }
                        break;
                 default:
-                    if(!optionalTructure)                        
-                        error.add("Missing expression inside structure " +structure +token.get(0).getLine());
-                    optionalTructure = true;
+                  //  if(!optionalTructure)                        
+                        error.add("Missing expression inside structure " +structure +token.get(0). getLineForError());
+                   // optionalTructure = true;
                     //token.remove(0);
                     break;
             }
