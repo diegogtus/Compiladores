@@ -179,7 +179,6 @@ String path;
             analizedFile = analizedFile + "\n" + parserErrors;
             txta_output.append(parserErrors + "\n");
         }
-         FILE();
         write(analizedFile);
     }//GEN-LAST:event_jButton2ActionPerformed
 private void read() {
@@ -216,23 +215,6 @@ private void read() {
         }
     }
 
-private void FILE(){
-      if( "Tronitos-1-CSharp.txt".equals(path)) {
-                
-                 txta_output.append("\n\n\n***PARSER ERRORS***\n");
-               txta_output.append("Malformed VOID STATEMENT line 5 col 13-14" + "\n" );
-                    if (true) {
-                       txta_output.append("Malformed IF STATEMENT line 31" );
-                    }
-            }else if("Tronitos-2-CSharp.txt".equals(path)){
-               
-                 txta_output.append("\n\n\n***PARSER ERRORS***\n");
-               txta_output.append("Malformed CLASS STATEMENT  line 1 " + "\n" );
-               txta_output.append("ILLEGAL RETURN STATEMENT  line 10 " + "\n" );
-               txta_output.append("ILLEGAL STATEMENT  line 11 cols1-2" + "\n" );
-               txta_output.append("MISSING SEMICOLON  line 27 " + "\n" );
-            }
-}
 private void write(String analizedFile) {
         File fichero=new File(NombreArchivo+".out");//creando fichero txt en raiz
         PrintWriter writer;
