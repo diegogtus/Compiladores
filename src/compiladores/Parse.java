@@ -6,9 +6,13 @@
 package compiladores;
 
 import static compiladores.Tokenizer.TokenType.ERROR;
+import static compiladores.Tokenizer.TokenType.ID;
+import static compiladores.Tokenizer.TokenType.SYCLOSECURLYBRAKET;
 import static compiladores.Tokenizer.TokenType.SYCLOSEPARENTHESES;
 import static compiladores.Tokenizer.TokenType.SYCOLON;
+import static compiladores.Tokenizer.TokenType.SYCOMMA;
 import static compiladores.Tokenizer.TokenType.SYEQUALS;
+import static compiladores.Tokenizer.TokenType.SYOPENCURLYBRAKET;
 import static compiladores.Tokenizer.TokenType.SYSEMICOLON;
 import java.awt.List;
 import java.util.ArrayList;
@@ -35,11 +39,13 @@ public class Parse{
         PROGRAM(token);
         return error;
     }
+    
      public void PROGRAM(ArrayList<Tokenizer.Token> token){
         if (token.size() != 0) {
             DECL(token);
         }
      }
+     
       public void DECL (ArrayList<Tokenizer.Token> token){
         if (token.size() != 0) {
           switch(token.get(0).type) {
@@ -63,7 +69,7 @@ public class Parse{
                   if (token.size() > 1) {
                     switch(token.get(1).type) {
                         case CLASS:
-                            //CLASSDECL(token);
+                       //     CLASSDECL(token);
                             break;
                         case CONST:
                             CONSTDECL(token);
@@ -76,20 +82,105 @@ public class Parse{
                    }
                   break;
           }
-        }
-        
+        } 
       }
+      
+      public void CLASSDECL (ArrayList <Tokenizer.Token> token){
+          if (token.size()!=0) {
+            switch(token.get(0).type) {               
+             case CLASS:
+                 token.remove(0);
+                 if (token.size() != 0) {   
+                        switch(token.get(0).type){
+                            case ID:
+                                token.remove(0);
+                               if(token.size()!= 0){
+                                    if(token.get(0).type == SYCOLON){
+                                        token.remove(0);
+                                        //EXPR(token);
+                                        //ClassDecl  class ident <: ident> < , ident+ ,> {Field*}
+                                        if (token.size() != 0) {
+                                            switch(token.get(0).type){
+                                                case ID:
+                                                    token.remove(0);
+                                                    if (token.get(0).type == SYCOMMA) {
+                                                        token.remove(0);
+                                                        while(token.get(0).type == ID && token.size() != 0){
+                                                            token.remove(0);
+                                                            if (token.size() != 0 ) {
+                                                                if (token.get(0).type == SYCOMMA) {
+                                                                    token.remove(0);
+                                                                }else{
+                                                                    error.add("ID Invalid in Class Declaration. " + token.get(0).toError());
+                                                                    break;
+                                                                }
+                                                            }else{
+                                                                error.add("Class Declaration incomplete. " + token.get(0).toError());
+                                                            }
+                                                        }
+                                                    }else{
+                                                        error.add("ID Invalid in Class Declaration. " + token.get(0).toError());
+                                                    }
+                                                    break;
+                                                default:
+                                                    error.add("Missing ID at the Class Declaration. " + token.get(0).getLine());
+                                                    break;
+                                            }
+                                        }
+                                    }else if(token.get(0).type == SYOPENCURLYBRAKET) {
+                                       token.remove(0);
+                                       //Agregar Método
+                                       //FIELD(token);
+                                        if (token.size() != 0) {
+                                            if (token.get(0).type == SYCLOSECURLYBRAKET) {
+                                                token.remove(0);
+                                            }else{
+                                                error.add("Missing SYCLOSECURLYBRAKET at the end of the CLASSDECL." + token.get(0).toError());
+                                            }
+                                        }
+                                   }else{
+                                        error.add("Missing SYCLOSECURLYBRAKET at the end of the CLASSDECL." + token.get(0).toError());
+                                    }
+                                }
+                                break;
+                            default:
+                                 error.add("Illegal CLASSDECL structure: " + token.get(0).toError());
+                                break;
+                        }
+                    }else{
+                        error.add("Illegal EXPRESION CLASSDECL structure: " + token.get(0).getLine());
+                    }
+                 break;
+             default:
+                 error.add("Illegal EXPRESION in CLASSDECL structure: " + token.get(0).getLine());
+                 break;
+            }
+          }
+      }
+      
       /* public void FUNCTDECL (ArrayList<Tokenizer.Token> token){
             if (token.size() != 0) {
                 VARIABLE(token);
             }
         }
+      */
        public void VARIABLEDEC (ArrayList<Tokenizer.Token> token){
         if (token.size() != 0) {
             VARIABLE(token);
-            
+            if (token.size() != 0) {
+                switch(token.get(0).type) {               
+                 case SYSEMICOLON:
+                     token.remove(0);
+                     break;
+                 default:
+                     error.add("Illegal EXPRESION VARIABLEDECL structure: " + token.get(0).getLine());
+                     break;
+               }
+            }
         }
-     }
+       }
+       
+       /*
      public void VARIABLE (ArrayList<Tokenizer.Token> token){
         if (token.size() != 0) {
             TYPE(token);
@@ -214,6 +305,7 @@ public class Parse{
                      //error.add("Illegal PROTOTYPE structure: " + token.get(0).toError());
                     break;
             }
+            //Evaluar Prototype --> WVR
             //if (token.size() != 0) {
             PROTOTYPEp(token);
             //}
@@ -353,13 +445,14 @@ public class Parse{
                             switch(token.get(0).type){
                                 case SYBRAKETCLOSE:
                                     token.remove(0);
+                                    TYPEp(token);
                                     break;
                                  default:
                                     error.add("Illegal EXPRESION TYPE structure: " + token.get(0).getLine());
                                     break;
                             }  
                         }      
-                     TYPEp(token);
+                     //TYPEp(token);
                      break;
                  default:
                      break;
