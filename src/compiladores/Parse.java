@@ -130,7 +130,7 @@ public class Parse{
                                     }else if(token.get(0).type == SYOPENCURLYBRAKET) {
                                        token.remove(0);
                                        //Agregar Método
-                                       //FIELD(token);
+                                       FIELD(token);
                                         if (token.size() != 0) {
                                             if (token.get(0).type == SYCLOSECURLYBRAKET) {
                                                 token.remove(0);
@@ -158,12 +158,41 @@ public class Parse{
           }
       }
       
-      /* public void FUNCTDECL (ArrayList<Tokenizer.Token> token){
+       public void FIELD (ArrayList<Tokenizer.Token> token){
             if (token.size() != 0) {
-                VARIABLE(token);
+                switch(token.get(0).type) {
+                    case CONST:
+                        CONSTDECL(token);
+                        break;
+                    default:
+                        switch(token.get(0).type) {
+                            case INT:
+                            case DOUBLE:
+                            case BOOL:
+                            case STRING:
+                            case IDENT:
+                                if (token.size()> 1) {
+                                    switch(token.get(2).type) {
+                                     case SYSEMICOLON:
+                                      VARIABLEDEC(token);
+                                      break;
+                                  case SYOPENPARENTHESES:
+                                      FUNCTIONDECL(token);
+                                      break;
+                                  default:
+                                      error.add("Illegal EXPRESION in FIELD structure: " + token.get(0).getLine());
+                                      break;
+                                    }   
+                                }
+                            break;
+                        default:
+                             error.add("Illegal EXPRESION in FIELD structure: " + token.get(0).getLine());
+                            break;
+                        }
+                }
             }
         }
-      */
+      
        public void VARIABLEDEC (ArrayList<Tokenizer.Token> token){
         if (token.size() != 0) {
             VARIABLE(token);
