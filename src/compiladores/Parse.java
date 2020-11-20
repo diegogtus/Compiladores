@@ -42,23 +42,28 @@ public class Parse{
     
      public void PROGRAM(ArrayList<Tokenizer.Token> token){
         if (token.size() != 0) {
-            DECL(token);
+            do{
+                DECL(token);
+//                token.remove(0);
+            }while(token.size() != 0);
         }
      }
      
       public void DECL (ArrayList<Tokenizer.Token> token){
         if (token.size() != 0) {
+            System.out.println("Token 1: " + token.get(0).data);
           switch(token.get(0).type) {
               case INT:
-              case DOUBLE:
+              case DOUBLERESERVED:
               case BOOL:
-              case STRING:
+              case STRINGRESERVED:
               case IDENT:
+              case VOID:
                   //token.remove(0);
-                  switch(token.get(1).type) {
+                  switch(token.get(2).type) {
                     case SYSEMICOLON:
                     case SYSQUAREBRAKET:
-                        VARIABLE(token);
+                        VARIABLEDEC(token);
                         break;
                     default:
                         FUNCTIONDECL(token);
@@ -67,15 +72,19 @@ public class Parse{
               
               default:
                   if (token.size() > 1) {
-                    switch(token.get(1).type) {
+                      System.out.println("Token 1: " + token.get(0).data);
+                    switch(token.get(0).type) {
                         case CLASS:
-                       //     CLASSDECL(token);
+                            CLASSDECL(token);
                             break;
                         case CONST:
                             CONSTDECL(token);
                             break;
                         case INTERFACE:
                             INTERFACEDECL(token);
+                            break;
+                        default:
+                            
                             break;
                     }
                         
@@ -386,6 +395,9 @@ public class Parse{
                     }
                     break;
                 default:
+                    if (token.size() > 0) {
+                        token.remove(0);
+                    }
                     error.add("Missing ID at the end of the PROTOTYPEp: " + token.get(0).toError());
                     break;
             }
@@ -411,11 +423,11 @@ public class Parse{
                                         case SYOPENCURLYBRAKET:
                                              token.remove(0);
                                              //Ocurrencia: puede o no venir
-                                            while(token.size()>1){
-                                                PROTOTYPE(token);
-                                            }
+//                                            while(token.size()>1){
+//                                                PROTOTYPE(token);
+//                                            }
                                             if(token.size()!=0){
-                                                //PROTOTYPE(token);
+                                                PROTOTYPE(token);
                                                  //if(token.size()> 1){
                                                      switch(token.get(0).type){
                                                         case SYCLOSECURLYBRAKET:
@@ -442,7 +454,7 @@ public class Parse{
                             default:
                                  error.add("Illegal INTERFACEDECL structure: " + token.get(0).toError());
                                  
-                            break;
+                                break;
                                 
                         }
                     }else{
@@ -458,9 +470,9 @@ public class Parse{
         }
         
         if (token.size()!= 0) {
-             while(token.size()>1){
+             //while(token.size()>1){
                 PROTOTYPE(token);
-            }
+            //}
         }
     } 
      
@@ -605,7 +617,7 @@ public class Parse{
                                     switch(token.get(0).type){
                                         case SYCLOSEPARENTHESES:
                                             token.remove(0);
-                                           // STMTBLOCK(token);
+                                            STMTBLOCK(token);
                                             break;
                                         default:
                                              error.add("Illegal FUNCTIONDECLp structure: " + token.get(0).toError());
@@ -673,6 +685,10 @@ public class Parse{
                break;
            case SYSEMICOLON:
                token.remove(0);
+               break;
+           case ID:
+               token.remove(0);
+               CALLSTMT(token);
                break;
            default:
                if(token.get(0).type == ERROR ){
@@ -1200,5 +1216,40 @@ public class Parse{
             }
         }else
             error.add("Illegal EXPRESION CONSTANT structure"+token.get(0).getLine());
+    }
+
+    private void STMTBLOCK(ArrayList<Tokenizer.Token> token) {
+        if (token.size() != 0) {
+            VARIABLEDEC(token);
+            CONSTDECL(token);
+            STATEMENT(token);
+        }
+    }
+    
+    public void CALLSTMT(ArrayList<Tokenizer.Token> token){
+        if (token.size() != 0) {
+            switch(token.get(0).type){
+                case SYOPENPARENTHESES:
+                    token.remove(0);
+                    if (token.size() != 0 ) {
+                        ACTUALS(token);
+                    }else{
+                        error.add("Missing expression inside CALLSTMT structure " +structure +token.get(0).getLine());
+                    }
+                    break;
+                case SYDOT:
+                    token.remove(0);
+                    if (token.size() != 0) {
+                        if (token.get(0).type == ID) {
+                            token.remove(0);
+                            ACTUALS(token);
+                        }else{
+                            error.add("Missing expression inside CALLSTMT structure " +structure +token.get(0). getLineForError());
+                        }
+                    }
+                    break;
+                    
+            }
+        }
     }
 }
