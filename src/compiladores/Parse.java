@@ -422,12 +422,12 @@ public class Parse{
                                     switch(token.get(0).type){
                                         case SYOPENCURLYBRAKET:
                                              token.remove(0);
-                                             //Ocurrencia: puede o no venir
-//                                            while(token.size()>1){
-//                                                PROTOTYPE(token);
-//                                            }
-                                            if(token.size()!=0){
+//                                             Ocurrencia: puede o no venir
+                                            while(token.get(1).type == ID){
                                                 PROTOTYPE(token);
+                                            }
+                                            if(token.size()!=0){
+                                                //PROTOTYPE(token);
                                                  //if(token.size()> 1){
                                                      switch(token.get(0).type){
                                                         case SYCLOSECURLYBRAKET:
@@ -469,11 +469,11 @@ public class Parse{
             error.add("Illegal INTERFACEDECL structure: " + token.get(0).toError());
         }
         
-        if (token.size()!= 0) {
+        //if (token.size()!= 0) {
              //while(token.size()>1){
-                PROTOTYPE(token);
+                //PROTOTYPE(token);
             //}
-        }
+        //}
     } 
      
     public void TYPEp(ArrayList<Tokenizer.Token> token) {
@@ -688,6 +688,7 @@ public class Parse{
                break;
            case ID:
                token.remove(0);
+               EXPR(token);
                CALLSTMT(token);
                break;
            default:
@@ -1220,9 +1221,24 @@ public class Parse{
 
     private void STMTBLOCK(ArrayList<Tokenizer.Token> token) {
         if (token.size() != 0) {
-            VARIABLEDEC(token);
-            CONSTDECL(token);
-            STATEMENT(token);
+            if (token.get(0).type == SYOPENCURLYBRAKET) {
+                token.remove(0);
+                VARIABLEDEC(token);
+                CONSTDECL(token);
+                STATEMENT(token);
+                if (token.size() != 0) {
+                    if (token.get(0).type == SYCLOSECURLYBRAKET) {
+                        token.remove(0);
+                    }else{
+                        error.add("Missing SYCLOSECURLYBRAKET in STMTBLOCK " +structure +token.get(0).getLine());
+                    }
+                }else{
+                    error.add("Error in STMTBLOCK structure " +token.get(0).getLine());
+                }
+            }else{
+                error.add("Missing SYOPENCURLYBRAKET in STMTBLOCK " +structure +token.get(0).getLine());
+            }
+            
         }
     }
     
@@ -1248,12 +1264,22 @@ public class Parse{
                         }
                     }
                     break;
-                    
+                default:
+                    error.add("Missing expression inside CALLSTMT structure " +structure +token.get(0). getLineForError());
+                    break;
             }
         }
     }
 
     private void ACTUALS(ArrayList<Tokenizer.Token> token) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (token.size() != 0) {
+            EXPR(token);
+            if (token.get(0).type == SYCOMMA) {
+                token.remove(0);
+                ACTUALS(token);
+            }else{
+                return;
+            }
+        }
     }
 }
