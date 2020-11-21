@@ -1,0 +1,21 @@
+|VARIABLE  |TYPE           |ATTRIBUTE |VALOR     |
+|area      |DOUBLERESERVED |VARIABLE  |NULL      |
+|global3   |DOUBLERESERVED |VARIABLE  |NULL      |
+|number3   |INT            |VARIABLE  |NULL      |
+|sum       |INT            |VARIABLE  |NULL      |
+|number1   |INT            |VARIABLE  |10        |
+|number2   |INT            |VARIABLE  |NULL      |
+|sideA     |DOUBLERESERVED |VARIABLE  |NULL      |
+|perimeter |DOUBLERESERVED |VARIABLE  |NULL      |
+|global2   |INT            |VARIABLE  |NULL      |
+|numberC   |DOUBLERESERVED |VARIABLE  |NULL      |
+|x         |BOOL           |VARIABLE  |NULL      |
+|pi        |DOUBLERESERVED |CONSTANT  |3.1416    |
+|global1   |INT            |VARIABLE  |NULL      |
+|y         |BOOL           |VARIABLE  |NULL      |
+|numberA   |DOUBLERESERVED |VARIABLE  |NULL      |
+|AnotherString|STRINGRESERVED |VARIABLE  |" This is another string"|
+|z         |BOOL           |VARIABLE  |NULL      |
+|numberB   |DOUBLERESERVED |VARIABLE  |NULL      |
+|MyString  |STRINGRESERVED |VARIABLE  |"Hello World!"|
+|circun    |DOUBLERESERVED |VARIABLE  |NULL      |
