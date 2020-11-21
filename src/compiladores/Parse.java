@@ -20,6 +20,7 @@ import static compiladores.Tokenizer.TokenType.WHILE;
 import static compiladores.Tokenizer.TokenType.FOR;
 import static compiladores.Tokenizer.TokenType.IF;
 import static compiladores.Tokenizer.TokenType.INTERFACE;
+import static compiladores.Tokenizer.TokenType.SYOPENPARENTHESES;
 import static compiladores.Tokenizer.TokenType.VOID;
 import java.awt.List;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class Parse{
               case DOUBLERESERVED:
               case BOOL:
               case STRINGRESERVED:
-              case IDENT:
+              case ID:
               case VOID:
                   //token.remove(0);
                   switch(token.get(2).type) {
@@ -197,7 +198,7 @@ public class Parse{
                             case DOUBLE:
                             case BOOL:
                             case STRING:
-                            case IDENT:
+                            case ID:
                                 if (token.size()> 1) {
                                     switch(token.get(2).type) {
                                      case SYSEMICOLON:
@@ -248,6 +249,9 @@ public class Parse{
            break;
            case CONST:
                CONSTDECL(token);
+               break;
+           case ID:
+               STATEMENT(token);
                break;
         }
        }
@@ -724,21 +728,27 @@ public class Parse{
                break;
            case ID:
                //token.remove(0);
-               EXPR(token);
-              // CALLSTMT(token);
-               if(token.size()!= 0){
-                    if(token.get(0).type == SYSEMICOLON)
-                        token.remove(0);
-                    else
-                        error.add("Missing semicolon" +  token.get(0).getLineSimicolon());
+               if (token.get(1).type == SYOPENPARENTHESES || token.get(3).type == SYOPENPARENTHESES) {
+                   token.remove(0);
+                   CALLSTMT(token);
+               }else{
+                   
+                    EXPR(token);
+
                     if(token.size()!= 0){
-                        if(LastToken == token.get(0))
-                            token.remove(0);
-                        if(token.size()!= 0)
-                            LastToken = token.get(0);
-                    }
-                    break;
-                }error.add("Missing semicolon at the end of the file" );
+                         if(token.get(0).type == SYSEMICOLON)
+                             token.remove(0);
+                         else
+                             error.add("Missing semicolon" +  token.get(0).getLineSimicolon());
+                         if(token.size()!= 0){
+                             if(LastToken == token.get(0))
+                                 token.remove(0);
+                             if(token.size()!= 0)
+                                 LastToken = token.get(0);
+                         }
+                         break;
+                     }error.add("Missing semicolon at the end of the file" );
+               }
                break;
            case SYOPENCURLYBRAKET:
                    STMTBLOCK(token);
@@ -871,11 +881,14 @@ public class Parse{
                                         token.remove(0);
                                         if (token.size()!=0) {
                                             STATEMENT(token);
-                                            if (token.get(1).type == ELSE) { //VERIFICAR ELSE
+                                            if (token.size() != 0 && token.size() >1) {
+                                                if (token.get(1).type == ELSE) { //VERIFICAR ELSE
                                                 token.remove(0);
                                                 token.remove(0);
                                                 STATEMENT(token);
+                                                }
                                             }
+                                            
 //                                           }else{    
 //                                                error.add("Illegal IF structure: " + token.get(0).getLine());
 //                                            }
@@ -1349,13 +1362,19 @@ public class Parse{
         }
     }
     
-    public void CALLSTMT(ArrayList<Tokenizer.Token> token){
+public void CALLSTMT(ArrayList<Tokenizer.Token> token){
+    System.out.println("Income to CALLSTMT... ");
         if (token.size() != 0) {
             switch(token.get(0).type){
                 case SYOPENPARENTHESES:
                     token.remove(0);
                     if (token.size() != 0 ) {
                         ACTUALS(token);
+                        if (token.get(0).type == SYCLOSEPARENTHESES) {
+                            token.remove(0);
+                        }else{
+                            error.add("Missing SYCLOSEPARENTHESES inside CALLSTMT structure " +token.get(0).getLine());
+                        }
                     }else{
                         error.add("Missing expression inside CALLSTMT structure " +structure +token.get(0).getLine());
                     }
@@ -1366,6 +1385,11 @@ public class Parse{
                         if (token.get(0).type == ID) {
                             token.remove(0);
                             ACTUALS(token);
+                            if (token.get(0).type == SYCLOSEPARENTHESES) {
+                            token.remove(0);
+                            }else{
+                                error.add("Missing SYCLOSEPARENTHESES inside CALLSTMT structure " +token.get(0).getLine());
+                            }
                         }else{
                             error.add("Missing expression inside CALLSTMT structure " +structure +token.get(0). getLineForError());
                         }
@@ -1385,6 +1409,7 @@ public class Parse{
                 token.remove(0);
                 ACTUALS(token);
             }else{
+                error.add("Error in Argument for function is invalid " + token.get(0).getLine());
                 return;
             }
         }
