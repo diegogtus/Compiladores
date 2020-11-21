@@ -5,12 +5,31 @@
  */
 package compiladores;
 
+import compiladores.SymbolTable.Values;
+import static compiladores.Tokenizer.TokenType;
+import static compiladores.Tokenizer.TokenType.ID;
+import static compiladores.Tokenizer.TokenType.BOOL;
+import static compiladores.Tokenizer.TokenType.ID;
+import static compiladores.Tokenizer.TokenType.DOUBLERESERVED;
+import static compiladores.Tokenizer.TokenType.INT; 
+import static compiladores.Tokenizer.TokenType.STRINGRESERVED;
+import static compiladores.Tokenizer.TokenType.CONST;
+import static compiladores.Tokenizer.TokenType.SYSEMICOLON;
+import static compiladores.Tokenizer.TokenType.SYEQUALS;
+import static compiladores.Tokenizer.TokenType.DOUBLE;
+import static compiladores.Tokenizer.TokenType.HEXA;
+import static compiladores.Tokenizer.TokenType.DECIMAL;
+import static compiladores.Tokenizer.TokenType.STRING;
+
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -158,7 +177,7 @@ String path;
        String analizedFile = "";
         txta_output.setText("");
         ArrayList<Tokenizer.Token> tokens = Lexer.lex(txta_input.getText());
-        
+        ArrayList<Tokenizer.Token> tokensList = Lexer.lex(txta_input.getText());
             txta_output.append("***TOKENIZER ERRORS**\n");
         for (Tokenizer.Token token : tokens){
             analizedFile = analizedFile +  "***TOKENIZER ERRORS**\n";
@@ -170,7 +189,7 @@ String path;
                 txta_output.append(token.toString()+ "\n\n");
         }
         Parse parse = new Parse();
-        ArrayList<String> parser = parse.parse(tokens);
+          /*  ArrayList<String> parser = parse.parse(tokens);
         if(!parser.isEmpty()){
             txta_output.append("\n\n\n***PARSER ERRORS***\n");
             analizedFile = analizedFile + "\n\n\n" + "***PARSER ERRORS***";
@@ -178,8 +197,13 @@ String path;
         for (String parserErrors : parser){
             analizedFile = analizedFile + "\n" + parserErrors;
             txta_output.append(parserErrors + "\n");
-        }
-        write(analizedFile);
+        }*/
+        createSymTable(tokensList);
+        
+        
+        
+        
+        write(analizedFile, "");
     }//GEN-LAST:event_jButton2ActionPerformed
 private void read() {
         File file = null;
@@ -214,9 +238,16 @@ private void read() {
            }
         }
     }
-
-private void write(String analizedFile) {
-        File fichero=new File(NombreArchivo+".out");//creando fichero txt en raiz
+private void hashTable(){
+    
+}
+private void write(String analizedFile, String file) {
+    File fichero;
+    if (file == "table") {
+        fichero=new File(NombreArchivo+".txt");//creando fichero txt en rai
+    }else   
+        fichero=new File(NombreArchivo+".out");//creando fichero txt en raiz
+    
         PrintWriter writer;
         try{
             writer=new PrintWriter(fichero);
@@ -277,4 +308,60 @@ private void write(String analizedFile) {
     private javax.swing.JTextArea txta_input;
     private javax.swing.JTextArea txta_output;
     // End of variables declaration//GEN-END:variables
+
+    private void createSymTable(ArrayList<Tokenizer.Token> tokensList) {
+        SymbolTable symTable = new SymbolTable();
+        for (int i = 0; i < tokensList.size()-3 ; i++) {
+            if ( tokensList.get(i).type == CONST && (tokensList.get(i+1).type == INT || tokensList.get(i+1).type == DOUBLERESERVED || tokensList.get(i+1).type == BOOL ||
+        tokensList.get(i+1).type == STRINGRESERVED) && tokensList.get(i+2).type == ID  && tokensList.get(i+3).type == SYSEMICOLON) {
+                Values value = new Values(tokensList.get(i+1).type.toString(),"CONSTANT","NULL");
+                symTable.symTable.put(tokensList.get(i+2).data.toString() ,value);
+                for (int j = 0; j < 4; j++) {
+                    tokensList.remove(i);
+                    
+                }
+                i=-1;
+               
+            }
+        }
+        for (int i = 0; i < tokensList.size()-2 ; i++) {
+            if ((tokensList.get(i).type == INT || tokensList.get(i).type == DOUBLERESERVED || tokensList.get(i).type == BOOL ||
+        tokensList.get(i).type == STRINGRESERVED) && tokensList.get(i+1).type == ID  && tokensList.get(i+2).type == SYSEMICOLON) {
+                Values value = new Values(tokensList.get(i).type.toString(),"VARIABLE", "NULL");
+                symTable.symTable.put(tokensList.get(i+1).data,value);
+                for (int j = 0; j < 3; j++) {
+                    tokensList.remove(i);
+                }
+                i=-1;
+            }
+        }
+        for (int i = 0; i < tokensList.size()-3; i++) {
+            if (tokensList.get(i).type == ID  && tokensList.get(i+1).type ==SYEQUALS && (tokensList.get(i+2).type == STRING || 
+            tokensList.get(i+2).type ==DOUBLE || tokensList.get(i+2).type == HEXA || tokensList.get(i+2).type == DECIMAL )&& tokensList.get(i+3).type == SYSEMICOLON) {
+                if (symTable.symTable.containsKey(tokensList.get(i).data)) {
+                    Values value = new Values(symTable.symTable.get(tokensList.get(i).data).type,symTable.symTable.get(tokensList.get(i).data).attribute, tokensList.get(i+2).data);
+                    symTable.symTable.replace(tokensList.get(i).data, value);
+                    for (int j = 0; j < 4; j++) {
+                        tokensList.remove(i);
+                    }
+                }
+            }
+        }
+        String line="";
+        Values valueTemp = new Values();
+        String key = null;
+
+     List<String> list = new ArrayList<String>();
+     list.add("|VARIABLE  |TYPE           |ATTRIBUTE |VALOR     |\n");
+            symTable.symTable.forEach(new BiConsumer<String, Values>() {
+            @Override
+            public void accept(String key, Values ValueTemp) {
+                list.add(String.format("|%-10s|%-15s|%-10s|%-10s|\n", key,ValueTemp.type, ValueTemp.attribute, ValueTemp.value ));
+            }
+        });
+        for (int i = 0; i < list.size(); i++) {
+            line += list.get(i);
+        }
+        write(line,"table");
+    }
 }
