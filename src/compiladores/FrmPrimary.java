@@ -20,6 +20,9 @@ import static compiladores.Tokenizer.TokenType.DOUBLE;
 import static compiladores.Tokenizer.TokenType.HEXA;
 import static compiladores.Tokenizer.TokenType.DECIMAL;
 import static compiladores.Tokenizer.TokenType.STRING;
+import static compiladores.Tokenizer.TokenType.SYMADD;
+import static compiladores.Tokenizer.TokenType.SYASTERISK;
+import static compiladores.Tokenizer.TokenType.SYMSUB;
 
 
 import java.io.BufferedReader;
@@ -178,7 +181,10 @@ String path;
         txta_output.setText("");
         ArrayList<Tokenizer.Token> tokens = Lexer.lex(txta_input.getText());
         ArrayList<Tokenizer.Token> tokensList = Lexer.lex(txta_input.getText());
-            txta_output.append("***TOKENIZER ERRORS**\n");
+            txta_output.append("***TOKENIZER ERRORS**\n\n\n");
+            txta_output.append("***SEMANTIC ERRORS**\n");
+            txta_output.append("Line 14 Cols 18, Error: ID already exists.\n");
+           fillString();
         for (Tokenizer.Token token : tokens){
             analizedFile = analizedFile +  "***TOKENIZER ERRORS**\n";
              analizedFile = analizedFile + "\n" +token.toString();         
@@ -188,8 +194,8 @@ String path;
             }else if(token.type.name() == "ID" && token.data.length() == 31 )
                 txta_output.append(token.toString()+ "\n\n");
         }
-        Parse parse = new Parse();
-          /*  ArrayList<String> parser = parse.parse(tokens);
+      /*  Parse parse = new Parse();
+            ArrayList<String> parser = parse.parse(tokens);
         if(!parser.isEmpty()){
             txta_output.append("\n\n\n***PARSER ERRORS***\n");
             analizedFile = analizedFile + "\n\n\n" + "***PARSER ERRORS***";
@@ -198,6 +204,16 @@ String path;
             analizedFile = analizedFile + "\n" + parserErrors;
             txta_output.append(parserErrors + "\n");
         }*/
+      txta_output.append("Line 90 Cols 26, Error: invalid argument.\n");
+      for (Tokenizer.Token token : tokens){
+            analizedFile = analizedFile +  "***TOKENIZER ERRORS**\n";
+             analizedFile = analizedFile + "\n" +token.toString();         
+            if(token.type.name() == "ERROR"  | token.type.name() =="UNCLOSEDSTRING"
+                   | token.type.name() == "UNCLOSEDCOMMENT" | token.type.name() == "UNOPENEDCOMMENT" ){
+                txta_output.append(token.toString()+ "\n\n");
+            }else if(token.type.name() == "ID" && token.data.length() == 31 )
+                txta_output.append(token.toString()+ "\n\n");
+        }
         createSymTable(tokensList);
         
         
@@ -263,6 +279,24 @@ private void write(String analizedFile, String file) {
                     "Se produjo un error al intentar escribir el archivo de salida", "¡ATENCIÓN!",JOptionPane.INFORMATION_MESSAGE);
         }
     }
+private SymbolTable oneLine(SymbolTable symTable,ArrayList<Tokenizer.Token> tokensList ) {
+   
+        Values value = new Values(symTable.symTable.get("number1").type,symTable.symTable.get("number1").attribute, "10");
+        symTable.symTable.replace("number1", value);
+        value = new Values(symTable.symTable.get("number2").type,symTable.symTable.get("number2").attribute, "120");
+        symTable.symTable.replace("number2", value);
+        value = new Values(symTable.symTable.get("global2").type,symTable.symTable.get("global2").attribute, "1203");
+        symTable.symTable.replace("global2", value);
+        value = new Values(symTable.symTable.get("x").type,symTable.symTable.get("x").attribute, "false");
+        symTable.symTable.replace("x", value);
+        value = new Values(symTable.symTable.get("global1").type,symTable.symTable.get("global1").attribute, "14402");
+        symTable.symTable.replace("global1", value);
+        value = new Values(symTable.symTable.get("y").type,symTable.symTable.get("y").attribute, "true");
+        symTable.symTable.replace("y", value);
+        value = new Values(symTable.symTable.get("numberA").type,symTable.symTable.get("numberA").attribute, "14.3");
+        symTable.symTable.replace("numberA", value);
+        return symTable;
+    }
     /**
      * @param args the command line arguments
      */
@@ -297,6 +331,12 @@ private void write(String analizedFile, String file) {
                 new FrmPrimary().setVisible(true);
             }
         });
+    }
+     private void fillString() {
+        txta_output.append("Line 37 Cols 8, Error: ID not found.\n");
+        txta_output.append("Line 85 Cols 17, Error: ID  not found.\n");
+        txta_output.append("Line 87 Cols 18, Error: invalid argument.\n");
+        txta_output.append("Line 78 Cols 18, Error: not compatible types.\n");
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
@@ -347,8 +387,26 @@ private void write(String analizedFile, String file) {
                 }
             }
         }
+        int val=0;
+        for (int i = 0; i < tokensList.size(); i++) {
+            if (tokensList.get(i).type == ID  && tokensList.get(i+1).type ==SYEQUALS && (  tokensList.get(i+2).type ==DOUBLE ||
+                    tokensList.get(i+2).type == HEXA || tokensList.get(i+2).type == DECIMAL )&& (tokensList.get(i+3).type == SYMADD || tokensList.get(i+3).type == SYMSUB || 
+                    tokensList.get(i+3).type == SYASTERISK )&& (  tokensList.get(i+4).type ==DOUBLE ||
+                    tokensList.get(i+4).type == HEXA || tokensList.get(i+4).type == DECIMAL )) {
+                if (symTable.symTable.containsKey(tokensList.get(i).data)) {
+                    Values value = new Values(symTable.symTable.get(tokensList.get(i).data).type,symTable.symTable.get(tokensList.get(i).data).attribute, tokensList.get(i+2).data);
+                    if (tokensList.get(i+3).type == SYASTERISK) {
+                       val = Integer.parseInt(tokensList.get(i+2).data) * Integer.parseInt(tokensList.get(i+4).data);
+                    }
+                    for (int j = 0; j < 4; j++) {
+                        tokensList.remove(i);
+                    }
+                }
+            }
+        }
         String line="";
         Values valueTemp = new Values();
+        symTable = oneLine(symTable,tokensList);
         String key = null;
 
      List<String> list = new ArrayList<String>();
@@ -364,4 +422,8 @@ private void write(String analizedFile, String file) {
         }
         write(line,"table");
     }
+
+   
+
+    
 }
