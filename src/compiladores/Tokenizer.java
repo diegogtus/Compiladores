@@ -42,7 +42,7 @@ public class Tokenizer{
         NEWARRAY("NewArray"),
         NEW("New"),
         CONSOLE("Console"),
-        WRITELINE("WriteLine"),
+        WRITELINE("WriteLine|Writeline"),
         //UNCLOSEDSTRING("\"[^\r\n]+"),
         BOOLEAN("true|false"),
         ID("[a-zA-Z][\\w]*"),

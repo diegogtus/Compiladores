@@ -5,15 +5,23 @@
  */
 package compiladores;
 
+import static compiladores.Tokenizer.TokenType.ELSE;
 import static compiladores.Tokenizer.TokenType.ERROR;
 import static compiladores.Tokenizer.TokenType.ID;
 import static compiladores.Tokenizer.TokenType.SYCLOSECURLYBRAKET;
 import static compiladores.Tokenizer.TokenType.SYCLOSEPARENTHESES;
 import static compiladores.Tokenizer.TokenType.SYCOLON;
 import static compiladores.Tokenizer.TokenType.SYCOMMA;
+import static compiladores.Tokenizer.TokenType.SYDOT;
 import static compiladores.Tokenizer.TokenType.SYEQUALS;
 import static compiladores.Tokenizer.TokenType.SYOPENCURLYBRAKET;
 import static compiladores.Tokenizer.TokenType.SYSEMICOLON;
+import static compiladores.Tokenizer.TokenType.WHILE;
+import static compiladores.Tokenizer.TokenType.FOR;
+import static compiladores.Tokenizer.TokenType.IF;
+import static compiladores.Tokenizer.TokenType.INTERFACE;
+import static compiladores.Tokenizer.TokenType.SYOPENPARENTHESES;
+import static compiladores.Tokenizer.TokenType.VOID;
 import java.awt.List;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +56,7 @@ public class Parse{
             }while(token.size() != 0);
         }
      }
-     
+     //vERIFICAR ";" De final de asignación --> EXP;
       public void DECL (ArrayList<Tokenizer.Token> token){
         if (token.size() != 0) {
             System.out.println("Token 1: " + token.get(0).data);
@@ -57,7 +65,7 @@ public class Parse{
               case DOUBLERESERVED:
               case BOOL:
               case STRINGRESERVED:
-              case IDENT:
+              case ID:
               case VOID:
                   //token.remove(0);
                   switch(token.get(2).type) {
@@ -84,7 +92,11 @@ public class Parse{
                             INTERFACEDECL(token);
                             break;
                         default:
-                            
+                            //error.add("ID Invalid in Declaration. " + token.get(0).toError());
+                            if (token.get(0).type == SYOPENCURLYBRAKET || token.get(0).type == SYCLOSECURLYBRAKET) {
+                                error.add("ID Invalid in Declaration. " + token.get(0).toError());
+                                token.remove(0);
+                            }
                             break;
                     }
                         
@@ -129,6 +141,13 @@ public class Parse{
                                                         }
                                                     }else{
                                                         error.add("ID Invalid in Class Declaration. " + token.get(0).toError());
+                                                       // if (token.get(0).type == ID) {
+//                                                            token.remove(0);
+//                                                        }
+                                                       while(token.get(0).type != SYOPENCURLYBRAKET && token.size() != 0){
+                                                           token.remove(0);
+                                                       }
+                                                       //STATEMENT(token);
                                                     }
                                                     break;
                                                 default:
@@ -179,7 +198,7 @@ public class Parse{
                             case DOUBLE:
                             case BOOL:
                             case STRING:
-                            case IDENT:
+                            case ID:
                                 if (token.size()> 1) {
                                     switch(token.get(2).type) {
                                      case SYSEMICOLON:
@@ -194,6 +213,9 @@ public class Parse{
                                     }   
                                 }
                             break;
+                            case VOID:
+                                FUNCTIONDECL(token);
+                            break;
                         default:
                              error.add("Illegal EXPRESION in FIELD structure: " + token.get(0).getLine());
                             break;
@@ -203,7 +225,8 @@ public class Parse{
         }
       
        public void VARIABLEDEC (ArrayList<Tokenizer.Token> token){
-        if (token.size() != 0) {
+        //if (token.size() != 0) {
+        while((token.get(2).type == SYSEMICOLON) || (token.get(4).type == SYSEMICOLON)){
             VARIABLE(token);
             if (token.size() != 0) {
                 switch(token.get(0).type) {               
@@ -215,6 +238,21 @@ public class Parse{
                      break;
                }
             }
+        }
+       switch(token.get(0).type){
+           case IF:
+           case FOR:
+           case WHILE:
+           case FOREACH:
+           case CONSOLE:
+               STATEMENT(token);
+           break;
+           case CONST:
+               CONSTDECL(token);
+               break;
+           case ID:
+               STATEMENT(token);
+               break;
         }
        }
        
@@ -646,7 +684,9 @@ public class Parse{
     }
 /*CODIGO WALTER*/
     public void STATEMENT(ArrayList<Tokenizer.Token> token){
-     while(!token.isEmpty()){
+     //while(!token.isEmpty()){
+     //   if (token.size() != 0) {
+     while(token.get(0).type != SYCLOSECURLYBRAKET){
         switch (token.get(0).type) {
            case WHILE:
                token.remove(0);
@@ -687,9 +727,41 @@ public class Parse{
                token.remove(0);
                break;
            case ID:
+               //token.remove(0);
+               if (token.get(1).type == SYOPENPARENTHESES || token.get(3).type == SYOPENPARENTHESES) {
+                   token.remove(0);
+                   CALLSTMT(token);
+               }else{
+                   
+                    EXPR(token);
+
+                    if(token.size()!= 0){
+                         if(token.get(0).type == SYSEMICOLON)
+                             token.remove(0);
+                         else
+                             error.add("Missing semicolon" +  token.get(0).getLineSimicolon());
+                         if(token.size()!= 0){
+                             if(LastToken == token.get(0))
+                                 token.remove(0);
+                             if(token.size()!= 0)
+                                 LastToken = token.get(0);
+                         }
+                         break;
+                     }error.add("Missing semicolon at the end of the file" );
+               }
+               break;
+           case SYOPENCURLYBRAKET:
+                   STMTBLOCK(token);
+                   break;
+           case BREAK:
                token.remove(0);
-               EXPR(token);
-               CALLSTMT(token);
+               if (token.size() != 0) {
+                   if (token.get(0).type == SYSEMICOLON) {
+                       token.remove(0);
+                   }else{
+                       error.add("Missing semicolon" +  token.get(0).getLineSimicolon());
+                   }
+               }
                break;
            default:
                if(token.get(0).type == ERROR ){
@@ -697,7 +769,9 @@ public class Parse{
                     token.remove(0);
                     break;
                }
+               
                EXPR(token);
+               
                 if(token.size()!= 0){
                     if(token.get(0).type == SYSEMICOLON)
                         token.remove(0);
@@ -805,18 +879,33 @@ public class Parse{
                                 switch(token.get(0).type) {
                                     case SYCLOSEPARENTHESES:
                                         token.remove(0);
-                                        STATEMENT(token);
+                                        if (token.size()!=0) {
+                                            STATEMENT(token);
+                                            if (token.size() != 0 && token.size() >1) {
+                                                if (token.get(1).type == ELSE) { //VERIFICAR ELSE
+                                                token.remove(0);
+                                                token.remove(0);
+                                                STATEMENT(token);
+                                                }
+                                            }
+                                            
+//                                           }else{    
+//                                                error.add("Illegal IF structure: " + token.get(0).getLine());
+//                                            }
+                                        }
                                         break;
                                     default:
-                                        error.add("Illegal IF structure: " + token.get(0).toError());
+                                       // error.add("Illegal IF structure: " + token.get(0).toError());
                                         break;
                                 }
                             }
                         break;
                     default:
-                         error.add("Illegal IF structure: " + token.get(0).toError());
+                         //error.add("Illegal IF structure : " + token.get(0).toError());
                         break;
                 }
+            }else{
+                error.add("Illegal IF structure: " + token.get(0).toError());
             }
     }
      public void FOR (ArrayList<Tokenizer.Token> token){
@@ -913,14 +1002,27 @@ public class Parse{
             error.add("Illegal WHILE structure");
     }
     public void EXPR (ArrayList<Tokenizer.Token> token){
+        if (token.get(1).type == SYEQUALS) {
+            //token.remove(0);
+            LVALUE(token);
+            if (token.size() != 0) {
+                if (token.get(0).type == SYEQUALS) {
+                    token.remove(0);
+                    EXPR(token);
+                }else{
+                    error.add("Error to ASSIGNE variable in EXPR " +token.get(0).getLine());
+                }
+            }
+        }else{
         EXPRAND(token);
         EXPRp(token);
+        }
     }
       public void EXPRp (ArrayList<Tokenizer.Token> token){
          if(token.size()!= 0){
             switch(token.get(0).type){
               case SYOR:
-
+                  token.remove(0);
                   EXPRAND(token);
                   EXPRp(token);
                   break;
@@ -1223,9 +1325,27 @@ public class Parse{
         if (token.size() != 0) {
             if (token.get(0).type == SYOPENCURLYBRAKET) {
                 token.remove(0);
-                VARIABLEDEC(token);
-                CONSTDECL(token);
-                STATEMENT(token);
+                switch(token.get(0).type){
+                    case CONST:
+                        CONSTDECL(token);
+                        break;
+                    case IF:
+                    case FOR:
+                    case WHILE:
+                    case BREAK:
+                    case CONSOLE:
+                    case RETURN:
+                        STATEMENT(token);
+                        break;
+                    default:
+                        if (token.get(1).type == SYEQUALS || token.get(2).type == SYDOT || token.get(0).type == SYOPENCURLYBRAKET) {
+                            STATEMENT(token);
+                        }else{
+                            VARIABLEDEC(token);
+                        }
+                    break;
+                }
+                
                 if (token.size() != 0) {
                     if (token.get(0).type == SYCLOSECURLYBRAKET) {
                         token.remove(0);
@@ -1242,13 +1362,19 @@ public class Parse{
         }
     }
     
-    public void CALLSTMT(ArrayList<Tokenizer.Token> token){
+public void CALLSTMT(ArrayList<Tokenizer.Token> token){
+    System.out.println("Income to CALLSTMT... ");
         if (token.size() != 0) {
             switch(token.get(0).type){
                 case SYOPENPARENTHESES:
                     token.remove(0);
                     if (token.size() != 0 ) {
                         ACTUALS(token);
+                        if (token.get(0).type == SYCLOSEPARENTHESES) {
+                            token.remove(0);
+                        }else{
+                            error.add("Missing SYCLOSEPARENTHESES inside CALLSTMT structure " +token.get(0).getLine());
+                        }
                     }else{
                         error.add("Missing expression inside CALLSTMT structure " +structure +token.get(0).getLine());
                     }
@@ -1259,6 +1385,11 @@ public class Parse{
                         if (token.get(0).type == ID) {
                             token.remove(0);
                             ACTUALS(token);
+                            if (token.get(0).type == SYCLOSEPARENTHESES) {
+                            token.remove(0);
+                            }else{
+                                error.add("Missing SYCLOSEPARENTHESES inside CALLSTMT structure " +token.get(0).getLine());
+                            }
                         }else{
                             error.add("Missing expression inside CALLSTMT structure " +structure +token.get(0). getLineForError());
                         }
@@ -1278,7 +1409,27 @@ public class Parse{
                 token.remove(0);
                 ACTUALS(token);
             }else{
+                error.add("Error in Argument for function is invalid " + token.get(0).getLine());
                 return;
+            }
+        }
+    }
+
+    private void LVALUE(ArrayList<Tokenizer.Token> token) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (token.size() != 0) {
+            if (token.get(0).type == ID) {
+                token.remove(0);
+            }else{
+                EXPR(token);
+                if (token.size() != 0) {
+                    if (token.get(0).type == SYDOT) {
+                        token.remove(0);
+                        LVALUE(token);
+                    }else{
+                        error.add("Error to ASSIGNE variable " +token.get(0).getLine());
+                    }
+                }
             }
         }
     }

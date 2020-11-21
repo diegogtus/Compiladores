@@ -133,6 +133,28 @@ derecha el resultado del análisis léxico.
 
 ![](fourthScreen.png)
 
+##	Analisis Semántico
+Para el Analisis Semántico se implementó una HashTable para almacenar el valor y los tipos de tokens para las ID, funciones y métodos, ya que se facilita la inserción y busqueda de los mismos, por medio de su Key.
+
+En la asignación de variables y constantes, se realizó un método para llamar a la busqueda del token antes de la inserción, pues si ya existia el token entonces no se agregaba. En la HashTable se almacenan el nombre del token, el valor que algunas veces puede ser calculado, y el tipo para que tenga coherencia la operación a realizar.
+
+Para la comprobación de tipos se agregaron las siguientes producciones:
+```bash
+Stmt::= ... | CallStmt 
+
+CallStmt ::== ident(Actuals)
+		| ident.ident(Actuals)
+
+Actuals ::== Expr, Actuals
+		| Actuals
+```
+
+Se realizó un ajuste en Statement ya que al implementarlo confundía la llamada a LValue, por lo que fue necesario continuar haciendo uso de los follows de la Gramática.
+Estas producciones sirven para almacenar los valores de las funciones y métodos según el tipo que se definió, en caso contrario debe mostrar error y sin almacenar el valor.
+
+También se implementó un metodo para aplicar la coherción de tipos, ya que al operar un calculo entre un valor de tipo entero y uno de tipo decimal, el resultado se obtendrá de forma entera, descartando los decimales restantes si existieran.
+
+
 ## Release History
 
 * 1.0.0
