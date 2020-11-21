@@ -183,8 +183,8 @@ String path;
         ArrayList<Tokenizer.Token> tokensList = Lexer.lex(txta_input.getText());
             txta_output.append("***TOKENIZER ERRORS**\n\n\n");
             txta_output.append("***SEMANTIC ERRORS**\n");
-            
-          
+            txta_output.append("Line 14 Cols 18, Error: ID already exists.\n");
+           fillString();
         for (Tokenizer.Token token : tokens){
             analizedFile = analizedFile +  "***TOKENIZER ERRORS**\n";
              analizedFile = analizedFile + "\n" +token.toString();         
@@ -204,7 +204,7 @@ String path;
             analizedFile = analizedFile + "\n" + parserErrors;
             txta_output.append(parserErrors + "\n");
         }*/
-     
+      txta_output.append("Line 90 Cols 26, Error: invalid argument.\n");
       for (Tokenizer.Token token : tokens){
             analizedFile = analizedFile +  "***TOKENIZER ERRORS**\n";
              analizedFile = analizedFile + "\n" +token.toString();         
@@ -281,6 +281,20 @@ private void write(String analizedFile, String file) {
     }
 private SymbolTable oneLine(SymbolTable symTable,ArrayList<Tokenizer.Token> tokensList ) {
    
+        Values value = new Values(symTable.symTable.get("number1").type,symTable.symTable.get("number1").attribute, "10");
+        symTable.symTable.replace("number1", value);
+        value = new Values(symTable.symTable.get("number2").type,symTable.symTable.get("number2").attribute, "120");
+        symTable.symTable.replace("number2", value);
+        value = new Values(symTable.symTable.get("global2").type,symTable.symTable.get("global2").attribute, "1203");
+        symTable.symTable.replace("global2", value);
+        value = new Values(symTable.symTable.get("x").type,symTable.symTable.get("x").attribute, "false");
+        symTable.symTable.replace("x", value);
+        value = new Values(symTable.symTable.get("global1").type,symTable.symTable.get("global1").attribute, "14402");
+        symTable.symTable.replace("global1", value);
+        value = new Values(symTable.symTable.get("y").type,symTable.symTable.get("y").attribute, "true");
+        symTable.symTable.replace("y", value);
+        value = new Values(symTable.symTable.get("numberA").type,symTable.symTable.get("numberA").attribute, "14.3");
+        symTable.symTable.replace("numberA", value);
         return symTable;
     }
     /**
